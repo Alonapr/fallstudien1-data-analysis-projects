@@ -1,14 +1,13 @@
 library(ggplot2)
 
+setwd("C:/Users/alena/Documents/GitHub/Fallstudien-1/Projekt 1")
+
 data <- read.csv("census_2022_2002.csv")
 # Ueberblick ueber die Daten
 dim(data)
 head(data)
 str(data)
 summary(data)
-
-na_rows <- data[apply(is.na(data), 1, any), ]
-print(na_rows)
 
 # Entfernung von NA-Werten
 data_noNA <- na.omit(data)
@@ -24,31 +23,25 @@ dim(data2022)
 #1 - Haeufigkeitsverteilungen der Merkmale + Unterschiede zwischen Geschlechter
 attach(data2022)
 
-moda <- function(v) {
-  uniqv <- unique(v)
-  uniqv[which.max(tabulate(match(v, uniqv)))]
-}
-
 num_stat <- function(data) {
-  result <- matrix(NA, nrow = length(data), ncol = 9)
-  colnames(result) <- c("variable", "min", "max", "q0.25", "q0.75","median", 
-                        "moda", "mean", "var")
+  var_name <- c("Gesamte Lebenserwartung", "Männliche Lebenserwartung", 
+                "Weibliche Lebenserwartung", "Fertilitätsrate")
+  result <- matrix(NA, nrow = length(data), ncol = 7)
+  colnames(result) <- c("Variable", "min", "max", "IQR", "median", 
+                        "mean", "sd")
   for(i in 1:length(data)) {
-    var_name <- names(data)[i]  
     var_data <- data[[i]]
     Max <- max(var_data)
     Min <- min(var_data)
     q1 <- quantile(var_data, 0.25)
     q3 <- quantile(var_data, 0.75)
-    result[i, 1] <- var_name
+    result[i, 1] <- var_name[i]
     result[i, 2] <- round(Min, 2)
     result[i, 3] <- round(Max,2)
-    result[i, 4] <- round(q1,2)
-    result[i, 5] <- round(q3,2)
-    result[i, 6] <- round(median(var_data),2)
-    result[i, 7] <- round(moda(var_data),2)
-    result[i, 8] <- round(mean(var_data),2)
-    result[i, 9] <- round(var(var_data),2)
+    result[i, 4] <- round(q3 - q1,2)
+    result[i, 5] <- round(median(var_data),2)
+    result[i, 6] <- round(mean(var_data),2)
+    result[i, 7] <- round(sd(var_data),2)
   } 
   return(as.data.frame(result))
 }
@@ -67,21 +60,21 @@ boxplot(Life_Expectancy_Overall,
 # Unterschiede zwischen Geschlechter
 Diff_Lebenserwartung <- Life_Expectancy_Female - Life_Expectancy_Male
 hist(Diff_Lebenserwartung, xlab = "Weibliche - Männliche Lebenserwartung",
-     ylab = "Häufigkeit",
-     main = "Differenz der Lebenserwartung (Frauen - Männer)")
+     ylab = "Relative Häufigkeit",
+     main = "Differenz der Lebenserwartung (Frauen - Männer)", probability = TRUE)
 
 # Boxplot fuer gesamte Fertilitaet
-boxplot(Total_Fertility_Rate,
-        main = "Boxplot der Fertilitätsrate",
-        xlab = "Fertilitätsrate",
-        horizontal = TRUE)
+hist(Total_Fertility_Rate, main = "Histogramm für Fertilitätsrate",
+        xlab = "Fertilitätsrate", ylab = "Relative Häufigkeit", 
+     probability = TRUE)
 
 # Verteilung der Region
 freq <- table(Region)
 prozent <- round((freq / sum(freq)) * 100)
 region_name <- c("Afrika", "Amerika", "Asien", "Europa", "Ozeanien")
+beschriftung = paste(region_name, " ")
 
-pie(freq, labels = NA, main = "Häufigkeitsverteilung der Region", 
+pie(freq, labels = beschriftung, main = "Häufigkeitsverteilung der Region", 
     col = c("lightsalmon", "cornsilk", "lightgreen", "lightblue", "plum1"))
 
 angles <- cumsum(freq) / sum(freq) * 2 * pi
@@ -90,33 +83,13 @@ text_positions <- angles - (freq / sum(freq) * pi)
 text(x = cos(text_positions) * 0.5, y = sin(text_positions) * 0.5, 
      labels = paste(prozent, "%"), cex = 0.75)
 
-legend("topright", legend = region_name, 
-       fill = c("lightsalmon", "cornsilk", "lightgreen", "lightblue", "plum1"), 
-       title = "Regionen",
-       border = "black", bty = "o", cex = 0.7)   
-
-
 # Verteilung der Subregion
 table(Subregion)
-
-ggplot(data.frame(Subregion), aes(x = Subregion)) +
-  geom_bar(fill = "skyblue") +
-  labs(title = "Häufigkeitsverteilung der Subregionen",
-       x = "Subregionen",
-       y = "Häufigkeit") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 
 #2 - bivariate Zusammenhaenge zwischen den Merkmalen
 # Subregionen nach Region
-ggplot(data2022, aes(x = Subregion, fill = Region)) +
-  geom_bar(position = "dodge") +
-  labs(title = "Häufigkeitsverteilung der Subregionen nach Region",
-       x = "Subregionen",
-       y = "Häufigkeit",
-       fill = "Region:") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        legend.position = "top")
+table(Subregion, Region)
 
 # Streudiagramm der Lebenserwartung vs. Fertilitätsrate
 ggplot(data2022, aes(x = Life_Expectancy_Overall, y = Total_Fertility_Rate)) +
