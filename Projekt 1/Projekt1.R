@@ -95,7 +95,7 @@ table(Subregion, Region)
 ggplot(data2022, aes(x = Life_Expectancy_Overall, y = Total_Fertility_Rate)) +
   geom_point() +
   labs(title = "Zusammenhang zwischen Lebenserwartung und Fertilitätsrate",
-       x = "Lebenserwartung",
+       x = "Gesamte Lebenserwartung",
        y = "Fertilitätsrate")
 
 # Streudiagramm der Lebenserwartung von Maenner vs Frauen
@@ -106,20 +106,19 @@ ggplot(data2022, aes(x = Life_Expectancy_Female, y = Life_Expectancy_Male)) +
        y = "Männliche Lebenserwartung")
 
 # Boxplot der Lebenserwartung nach Region
-ggplot(data2022, aes(x = Region, y = Life_Expectancy_Overall)) +
-  geom_boxplot(fill = "lightblue") +
-  labs(title = "Boxplot der Lebenserwartung nach Region",
-       x = "Region",
-       y = "Gesamte Lebenserwartung") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+boxplot(Life_Expectancy_Overall ~ Region,
+        main = "Boxplot der Lebenserwartung nach Region",
+        ylab = "Region",
+        xlab = "Gesamte Lebenserwartung", horizontal = TRUE,
+        col = "lightblue")
 
 # Boxplot der Fertilitaet nach Region
-ggplot(data2022, aes(x = Region, y = Total_Fertility_Rate)) +
-  geom_boxplot(fill = "lightblue") +
-  labs(title = "Boxplot der Fertilitätsrate nach Region",
-       x = "Region",
-       y = "Fertilitätsrate") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+boxplot(Total_Fertility_Rate ~ Region,
+        main = "Boxplot der Fertilitätsrate nach Region",
+        ylab = "Region",
+        xlab = "Fertilitätsrate", horizontal = TRUE,
+        col = "lightblue")
+
 
 #3 - Unterschiede der Merkmale zwischen den Subregionen
 
