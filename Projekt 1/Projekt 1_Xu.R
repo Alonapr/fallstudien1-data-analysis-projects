@@ -102,7 +102,7 @@ ggplot(year2022, aes(x = factor(Subregion, levels = unique(Subregion)), y = Life
     plot.title = element_text(size = 16, face = "bold"),  # Überschrift größer und fett
     axis.title.x = element_text(size = 14),  # x-Achsenbeschriftung größer
     axis.title.y = element_text(size = 14, margin = margin(r = 10)),  # y-Achsenbeschriftung größer
-    axis.text.x = element_text(angle = 45, hjust = 1),
+    axis.text.x = element_text(angle = 45, hjust = 1), # x-Achsenbeschriftung um 45 Grad drehen
     legend.text = element_text(size = 12),  # Legendentext größer
     legend.title = element_text(size = 14)  # Legendentitel größer
   )
@@ -119,7 +119,23 @@ ggplot(year2022, aes(x = factor(Subregion, levels = unique(Subregion)), y = Life
     plot.title = element_text(size = 16, face = "bold"),  # Überschrift größer und fett
     axis.title.x = element_text(size = 14),  # x-Achsenbeschriftung größer
     axis.title.y = element_text(size = 14, margin = margin(r = 10)),  # y-Achsenbeschriftung größer mit Abstand
-    axis.text.x = element_text(angle = 45, hjust = 1),
+    axis.text.x = element_text(angle = 45, hjust = 1), # x-Achsenbeschriftung um 45 Grad drehen
+    legend.text = element_text(size = 12),  # Legendentext größer
+    legend.title = element_text(size = 14)  # Legendentitel größer
+  )
+
+# Boxplot Gesamte Lebenserwartung in den Subregionen
+ggplot(year2022, aes(x = factor(Subregion, levels = unique(Subregion)), y = Life_Expectancy_Overall, fill = Region)) +
+  geom_boxplot(coef = 1.5, size = 0.6) +
+  labs(title = "Gesamte Lebenserwartung in den Subregionen (2022)",
+       x = "Subregion",
+       y = "Lebenserwartung",
+       fill = "Region") +  # Legende für die Regionen hinzufügen
+  theme(
+    plot.title = element_text(size = 16, face = "bold"),  # Überschrift größer und fett
+    axis.title.x = element_text(size = 14),  # x-Achsenbeschriftung größer
+    axis.title.y = element_text(size = 14, margin = margin(r = 10)),  # y-Achsenbeschriftung größer mit Abstand
+    axis.text.x = element_text(angle = 45, hjust = 1), # x-Achsenbeschriftung um 45 Grad drehen
     legend.text = element_text(size = 12),  # Legendentext größer
     legend.title = element_text(size = 14)  # Legendentitel größer
   )
@@ -136,7 +152,7 @@ ggplot(year2022, aes(x = factor(Subregion, levels = unique(Subregion)), y = Tota
     plot.title = element_text(size = 16, face = "bold"),  # Überschrift größer und fett
     axis.title.x = element_text(size = 14),  # x-Achsenbeschriftung größer
     axis.title.y = element_text(size = 14, margin = margin(r = 10)),  # y-Achsenbeschriftung größer mit Abstand
-    axis.text.x = element_text(angle = 45, hjust = 1),
+    axis.text.x = element_text(angle = 45, hjust = 1), # x-Achsenbeschriftung um 45 Grad drehen
     legend.text = element_text(size = 12),  # Legendentext größer
     legend.title = element_text(size = 14)  # Legendentitel größer
   )
