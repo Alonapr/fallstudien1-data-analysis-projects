@@ -157,7 +157,24 @@ ggplot(year2022, aes(x = factor(Subregion, levels = unique(Subregion)), y = Tota
     legend.title = element_text(size = 14)  # Legendentitel größer
   )
 
+#####################
+#Zusätzliche Grafik
 
+# Boxplot Differenz der Lebenserwartung (Frauen - Männer) in den Subregionen
+ggplot(year2022, aes(x = factor(Subregion, levels = unique(Subregion)), y = Life_Expectancy_Female - Life_Expectancy_Male, fill = Region)) +
+  geom_boxplot(coef = 1.5, size = 0.6) +
+  labs(title = "Differenz der Lebenserwartung in den Subregionen (2022)",
+       x = "Subregion",
+       y = "Lebenserwartung",
+       fill = "Region") +  # Legende für die Regionen hinzufügen
+  theme(
+    plot.title = element_text(size = 16, face = "bold"),  # Überschrift größer und fett
+    axis.title.x = element_text(size = 14),  # x-Achsenbeschriftung größer
+    axis.title.y = element_text(size = 14, margin = margin(r = 10)),  # y-Achsenbeschriftung größer mit Abstand
+    axis.text.x = element_text(angle = 45, hjust = 1), # x-Achsenbeschriftung um 45 Grad drehen
+    legend.text = element_text(size = 12),  # Legendentext größer
+    legend.title = element_text(size = 14)  # Legendentitel größer
+  )
 
 ##################
 ##Boxplot mit Basic R Funktion, die X-Achse lassen sich nicht drehen, deshalb sieht sie nicht gut aus.
