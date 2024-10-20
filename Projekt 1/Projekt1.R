@@ -55,13 +55,14 @@ boxplot(Life_Expectancy_Overall,
         names = c("Gesamt", "Männlich", "Weiblich"),
         main = "Boxplots der Lebenserwartung",
         ylab = "Merkmale",
-        xlab = "Lebenserwartung (in Jahren)", horizontal = TRUE)
+        xlab = "Lebenserwartung (in Jahren)", horizontal = TRUE, col = "lightblue")
 
 # Unterschiede zwischen Geschlechter
 Diff_Lebenserwartung <- Life_Expectancy_Female - Life_Expectancy_Male
-hist(Diff_Lebenserwartung, xlab = "Weibliche - Männliche Lebenserwartung",
+hist(Diff_Lebenserwartung, xlab = "Differenz der Lebenserwartung (in Jahren)",
      ylab = "Relative Häufigkeit",
-     main = "Differenz der Lebenserwartung (Frauen - Männer)", probability = TRUE)
+     main = "Differenz der Lebenserwartung (Frauen - Männer)", probability = TRUE,
+     ylim = c(0, 0.25))
 
 # Boxplot fuer gesamte Fertilitaet
 hist(Total_Fertility_Rate, main = "Histogramm für Fertilitätsrate",
@@ -86,7 +87,6 @@ text(x = cos(text_positions) * 0.5, y = sin(text_positions) * 0.5,
 # Verteilung der Subregion
 table(Subregion)
 
-
 #2 - bivariate Zusammenhaenge zwischen den Merkmalen
 # Subregionen nach Region
 table(Subregion, Region)
@@ -110,14 +110,14 @@ boxplot(Life_Expectancy_Overall ~ Region,
         main = "Boxplot der Lebenserwartung nach Region",
         ylab = "Region",
         xlab = "Gesamte Lebenserwartung", horizontal = TRUE,
-        col = "lightblue")
+        names = region_name, col = "lightblue")
 
 # Boxplot der Fertilitaet nach Region
 boxplot(Total_Fertility_Rate ~ Region,
         main = "Boxplot der Fertilitätsrate nach Region",
         ylab = "Region",
         xlab = "Fertilitätsrate", horizontal = TRUE,
-        col = "lightblue")
+        col = "lightblue", names = region_name)
 
 
 #3 - Unterschiede der Merkmale zwischen den Subregionen
