@@ -55,14 +55,14 @@ boxplot(Life_Expectancy_Overall,
         names = c("Gesamt", "Männlich", "Weiblich"),
         main = "Boxplots der Lebenserwartung",
         ylab = "Merkmale",
-        xlab = "Lebenserwartung (in Jahren)", horizontal = TRUE, col = "lightblue")
+        xlab = "Lebenserwartung (in Jahren)", horizontal = FALSE, col = "lightblue")
 
 # Unterschiede zwischen Geschlechter
 Diff_Lebenserwartung <- Life_Expectancy_Female - Life_Expectancy_Male
 hist(Diff_Lebenserwartung, xlab = "Differenz der Lebenserwartung (in Jahren)",
      ylab = "Relative Häufigkeit",
      main = "Differenz der Lebenserwartung (Frauen - Männer)", probability = TRUE,
-     ylim = c(0, 0.25))
+     ylim = c(0, 0.30), breaks = -2:12)
 
 # Boxplot fuer gesamte Fertilitaet
 hist(Total_Fertility_Rate, main = "Histogramm für Fertilitätsrate",
