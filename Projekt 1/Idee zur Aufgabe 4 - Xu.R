@@ -77,3 +77,67 @@ diff_data <- data.frame(Region = names(avg_life_expectancy_2002),
 
 # Tabelle anzeigen
 print(diff_data)
+
+
+#Scatterplot
+
+# Scatterplot: Lebenserwartung 2002 vs. Lebenserwartung 2022
+
+data2002 <- subset(data, Year == 2002)
+dim(data2002)
+data2002_noNA <- subset(data_noNA, Year == 2002)
+
+data2022 <- subset(data, Year == 2022)
+dim(data2022)
+data2022_noNA <- subset(data_noNA, Year == 2022)
+
+# Lebenserwartung in 2002 und 2022 extrahieren
+life_2002 <- data2002$Life_Expectancy_Overall
+life_2022 <- data2022$Life_Expectancy_Overall
+
+# Region für jedes Land aus dem Jahr 2022 extrahieren
+regions_2022 <- data2022$Region
+
+# Farben für jede Region definieren
+region_colors <- c("Africa" = "#619CFF", "Americas" = "#00BA38", 
+                   "Asia" = "#F8766D", "Europe" = "#C77CFF", "Oceania" = "#B79F00")
+
+# Scatterplot erstellen: Lebenserwartung 2002 vs Lebenserwartung 2022
+plot(life_2002, life_2022,
+     main = "Lebenserwartung 2002 vs 2022",
+     xlab = "Lebenserwartung in 2002",
+     ylab = "Lebenserwartung in 2022",
+     pch = 19, xlim = c(45, 90), ylim = c(45, 90))
+
+# Hinzufügen einer Linie y = x als Referenz (zeigt, wo es keine Veränderung gab)
+abline(a = 0, b = 1, col = "red", lty = 2)
+abline(v = mean(data2002_noNA$Life_Expectancy_Overall), col = "blue", lty = 2)
+abline(h = mean(data2022_noNA$Life_Expectancy_Overall), col = "blue", lty = 2)
+
+# Legende hinzufügen
+legend("topleft", legend = names(region_colors), col = region_colors, pch = 19, cex = 0.8, box.lty = 0)
+
+#####
+#Stripchart
+
+# Daten vorbereiten
+life_2002 <- data2002$Life_Expectancy_Overall
+life_2022 <- data2022$Life_Expectancy_Overall
+
+# Kombiniere die Daten und füge eine Gruppenvariable für die Jahre hinzu
+lebenserwartung <- c(life_2002, life_2022)
+jahre <- factor(c(rep("2002", length(life_2002)), rep("2022", length(life_2022))))
+
+# Stripchart erstellen
+stripchart(lebenserwartung ~ jahre,
+           main = "Verteilung der gesamten Lebenserwartung (2002 und 2022)",
+           xlab = "Jahr",
+           ylab = "Gesamte Lebenserwartung",
+           vertical = TRUE,
+           pch = 1,
+           method = "stack",
+           jitter = 0.1)
+
+# Boxplots hinzufügen, um die zentralen Tendenzen zu zeigen
+boxplot(lebenserwartung ~ jahre, add = TRUE, at = c(1, 2), col = NA, border = "darkgray", lty = 1, lwd = 1.5, outline = FALSE)
+
