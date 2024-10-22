@@ -1,6 +1,6 @@
 library(ggplot2)
 
-setwd("C:/Users/alena/Documents/GitHub/Fallstudien-1/Projekt 1")
+#setwd("C:/Users/alena/Documents/GitHub/Fallstudien-1/Projekt 1")
 
 data <- read.csv("census_2022_2002.csv")
 # Ueberblick ueber die Daten
@@ -76,7 +76,10 @@ table(Region)
 # Verteilung der Subregion
 table(Subregion)
 
+################
+
 #2 - bivariate Zusammenhaenge zwischen den Merkmalen
+
 # Subregionen nach Region
 table(Subregion, Region)
 
@@ -90,22 +93,30 @@ ggplot(data2022, aes(x = Life_Expectancy_Overall, y = Total_Fertility_Rate)) +
 # Streudiagramm der Lebenserwartung von Maenner vs Frauen
 ggplot(data2022, aes(x = Life_Expectancy_Female, y = Life_Expectancy_Male)) +
   geom_point() +
+  geom_abline(intercept = 0, slope = 1, color = "red", linetype = "solid") +
   labs(title = "Zusammenhang zwischen Lebenserwartung von Frauen und Männer",
        x = "Weibliche Lebenserwartung",
-       y = "Männliche Lebenserwartung")
+       y = "Männliche Lebenserwartung") +
+  theme(
+    axis.title.x = element_text(size = 12),
+    axis.title.y = element_text(size = 12) 
+  )
 
 # Boxplot der Lebenserwartung nach Region
+
+region_name = c("Afrika", "Amerika", "Asien", "Europa", "Ozeanien")
+
 boxplot(Life_Expectancy_Overall ~ Region,
         main = "Boxplot der Lebenserwartung nach Region",
-        ylab = "Region",
-        xlab = "Gesamte Lebenserwartung", horizontal = TRUE,
+        ylab = "Gesamte Lebenserwartung (in Jahren)",
+        xlab = "Region", horizontal = FALSE,
         names = region_name, col = "lightblue")
 
 # Boxplot der Fertilitaet nach Region
 boxplot(Total_Fertility_Rate ~ Region,
         main = "Boxplot der Fertilitätsrate nach Region",
-        ylab = "Region",
-        xlab = "Fertilitätsrate", horizontal = TRUE,
+        ylab = "Fertilitätsrate",
+        xlab = "Region", horizontal = FALSE,
         col = "lightblue", names = region_name)
 
 
