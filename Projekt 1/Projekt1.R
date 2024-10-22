@@ -123,34 +123,34 @@ boxplot(Total_Fertility_Rate ~ Region,
 #3 - Unterschiede der Merkmale zwischen den Subregionen
 
 # Subregionen ins Deutsche übersetzen und Region hinzufügen
-Subregion[Subregion == "Eastern Africa"] <- "Ostafrika"
-Subregion[Subregion == "Middle Africa"] <- "Zentralafrika"
-Subregion[Subregion == "Northern Africa"] <- "Nordafrika"
-Subregion[Subregion == "Southern Africa"] <- "Südafrika"
-Subregion[Subregion == "Western Africa"] <- "Westafrika"
-Subregion[Subregion == "Caribbean"] <- "Karibik"
-Subregion[Subregion == "Central America"] <- "Mittelamerika"
-Subregion[Subregion == "Northern America"] <- "Nordamerika"
-Subregion[Subregion == "South America"] <- "Südamerika"
-Subregion[Subregion == "Eastern Asia"] <- "Ostasien"
-Subregion[Subregion == "South-Central Asia"] <- "Südzentralasien"
-Subregion[Subregion == "South-Eastern Asia"] <- "Südostasien"
-Subregion[Subregion == "Western Asia"] <- "Westasien"
-Subregion[Subregion == "Eastern Europe"] <- "Osteuropa"
-Subregion[Subregion == "Northern Europe"] <- "Nordeuropa"
-Subregion[Subregion == "Southern Europe"] <- "Südeuropa"
-Subregion[Subregion == "Western Europe"] <- "Westeuropa"
-Subregion[Subregion == "Australia/New Zealand"] <- "Australien/Neuseeland"
-Subregion[Subregion == "Melanesia"] <- "Melanesien"
-Subregion[Subregion == "Micronesia"] <- "Mikronesien"
-Subregion[Subregion == "Polynesia"] <- "Polynesien"
+data2022$Subregion[data2022$Subregion == "Eastern Africa"] <- "Ostafrika"
+data2022$Subregion[data2022$Subregion == "Middle Africa"] <- "Zentralafrika"
+data2022$Subregion[data2022$Subregion == "Northern Africa"] <- "Nordafrika"
+data2022$Subregion[data2022$Subregion == "Southern Africa"] <- "Südafrika"
+data2022$Subregion[data2022$Subregion == "Western Africa"] <- "Westafrika"
+data2022$Subregion[data2022$Subregion == "Caribbean"] <- "Karibik"
+data2022$Subregion[data2022$Subregion == "Central America"] <- "Mittelamerika"
+data2022$Subregion[data2022$Subregion == "Northern America"] <- "Nordamerika"
+data2022$Subregion[data2022$Subregion == "South America"] <- "Südamerika"
+data2022$Subregion[data2022$Subregion == "Eastern Asia"] <- "Ostasien"
+data2022$Subregion[data2022$Subregion == "South-Central Asia"] <- "Südzentralasien"
+data2022$Subregion[data2022$Subregion == "South-Eastern Asia"] <- "Südostasien"
+data2022$Subregion[data2022$Subregion == "Western Asia"] <- "Westasien"
+data2022$Subregion[data2022$Subregion == "Eastern Europe"] <- "Osteuropa"
+data2022$Subregion[data2022$Subregion == "Northern Europe"] <- "Nordeuropa"
+data2022$Subregion[data2022$Subregion == "Southern Europe"] <- "Südeuropa"
+data2022$Subregion[data2022$Subregion == "Western Europe"] <- "Westeuropa"
+data2022$Subregion[data2022$Subregion == "Australia/New Zealand"] <- "Australien/Neuseeland"
+data2022$Subregion[data2022$Subregion == "Melanesia"] <- "Melanesien"
+data2022$Subregion[data2022$Subregion == "Micronesia"] <- "Mikronesien"
+data2022$Subregion[data2022$Subregion == "Polynesia"] <- "Polynesien"
 
 # Region hinzufügen basierend auf den Subregionen
-Region <- ifelse(Subregion %in% c("Ostafrika", "Zentralafrika", "Nordafrika", "Südafrika", "Westafrika"), "Afrika",
-                          ifelse(Subregion %in% c("Karibik", "Mittelamerika", "Nordamerika", "Südamerika"), "Amerika",
-                                 ifelse(Subregion %in% c("Ostasien", "Südzentralasien", "Südostasien", "Westasien"), "Asien",
-                                        ifelse(Subregion %in% c("Osteuropa", "Nordeuropa", "Südeuropa", "Westeuropa"), "Europa",
-                                               ifelse(Subregion %in% c("Australien/Neuseeland", "Melanesien", "Mikronesien", "Polynesien"), "Ozeanien", 
+data2022$Region <- ifelse(data2022$Subregion %in% c("Ostafrika", "Zentralafrika", "Nordafrika", "Südafrika", "Westafrika"), "Afrika",
+                          ifelse(data2022$Subregion %in% c("Karibik", "Mittelamerika", "Nordamerika", "Südamerika"), "Amerika",
+                                 ifelse(data2022$Subregion %in% c("Ostasien", "Südzentralasien", "Südostasien", "Westasien"), "Asien",
+                                        ifelse(data2022$Subregion %in% c("Osteuropa", "Nordeuropa", "Südeuropa", "Westeuropa"), "Europa",
+                                               ifelse(data2022$Subregion %in% c("Australien/Neuseeland", "Melanesien", "Mikronesien", "Polynesien"), "Ozeanien", 
                                                       NA)))))
 
 # Sortieren der Daten nach Region und Subregion in neuer Variable year2022
