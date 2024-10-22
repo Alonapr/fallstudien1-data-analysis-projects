@@ -114,9 +114,6 @@ abline(a = 0, b = 1, col = "red", lty = 2)
 abline(v = mean(data2002_noNA$Life_Expectancy_Overall), col = "blue", lty = 2)
 abline(h = mean(data2022_noNA$Life_Expectancy_Overall), col = "blue", lty = 2)
 
-# Legende hinzufügen
-legend("topleft", legend = names(region_colors), col = region_colors, pch = 19, cex = 0.8, box.lty = 0)
-
 #####
 #Stripchart
 
@@ -127,17 +124,3 @@ life_2022 <- data2022$Life_Expectancy_Overall
 # Kombiniere die Daten und füge eine Gruppenvariable für die Jahre hinzu
 lebenserwartung <- c(life_2002, life_2022)
 jahre <- factor(c(rep("2002", length(life_2002)), rep("2022", length(life_2022))))
-
-# Stripchart erstellen
-stripchart(lebenserwartung ~ jahre,
-           main = "Verteilung der gesamten Lebenserwartung (2002 und 2022)",
-           xlab = "Jahr",
-           ylab = "Gesamte Lebenserwartung",
-           vertical = TRUE,
-           pch = 1,
-           method = "stack",
-           jitter = 0.1)
-
-# Boxplots hinzufügen, um die zentralen Tendenzen zu zeigen
-boxplot(lebenserwartung ~ jahre, add = TRUE, at = c(1, 2), col = NA, border = "darkgray", lty = 1, lwd = 1.5, outline = FALSE)
-

@@ -251,3 +251,4 @@ ggplot(year2022, aes(x = factor(Subregion, levels = unique(Subregion)), y = Life
 #4 - Vergleich von Merkmalen in 2002 und 2022
 
 detach(data2022)
+
