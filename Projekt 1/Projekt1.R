@@ -54,8 +54,8 @@ boxplot(Life_Expectancy_Overall,
         Life_Expectancy_Female,
         names = c("Gesamt", "Männlich", "Weiblich"),
         main = "Boxplots der Lebenserwartung",
-        ylab = "Merkmale",
-        xlab = "Lebenserwartung (in Jahren)", horizontal = FALSE, col = "lightblue")
+        ylab = "Lebenserwartung (in Jahren)",
+        xlab = "Merkmale", horizontal = FALSE, col = "lightblue")
 
 # Unterschiede zwischen Geschlechter
 Diff_Lebenserwartung <- Life_Expectancy_Female - Life_Expectancy_Male
@@ -69,20 +69,9 @@ hist(Total_Fertility_Rate, main = "Histogramm für Fertilitätsrate",
         xlab = "Fertilitätsrate", ylab = "Relative Häufigkeit", 
      probability = TRUE)
 
-# Verteilung der Region
-freq <- table(Region)
-prozent <- round((freq / sum(freq)) * 100)
-region_name <- c("Afrika", "Amerika", "Asien", "Europa", "Ozeanien")
-beschriftung = paste(region_name, " ")
+# Verteilung der Region mit Tabelle
 
-pie(freq, labels = beschriftung, main = "Häufigkeitsverteilung der Region", 
-    col = c("lightsalmon", "cornsilk", "lightgreen", "lightblue", "plum1"))
-
-angles <- cumsum(freq) / sum(freq) * 2 * pi
-text_positions <- angles - (freq / sum(freq) * pi)
-
-text(x = cos(text_positions) * 0.5, y = sin(text_positions) * 0.5, 
-     labels = paste(prozent, "%"), cex = 0.75)
+table(Region)
 
 # Verteilung der Subregion
 table(Subregion)
