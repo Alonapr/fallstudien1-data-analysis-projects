@@ -131,7 +131,11 @@ table(Subregion, Region)
 ggplot(data2022, aes(x = Life_Expectancy_Overall, y = Total_Fertility_Rate)) +
   geom_point() +
   labs(x = "Gesamte Lebenserwartung (in Jahren)",
-       y = "Fertilitätsrate")
+       y = "Fertilitätsrate") +
+  theme(
+    axis.title.x = element_text(size = 14),
+    axis.title.y = element_text(size = 14)
+  )
 
 # Zusammenhang zwischen Lebenserwartung von Frauen und Männer
 # Streudiagramm
@@ -141,8 +145,8 @@ ggplot(data2022, aes(x = Life_Expectancy_Female, y = Life_Expectancy_Male)) +
   labs(x = "Lebenserwartung der Frauen (in Jahren)",
        y = "Lebenserwartung der Männer (in Jahren)") +
   theme(
-    axis.title.x = element_text(size = 12),
-    axis.title.y = element_text(size = 12) 
+    axis.title.x = element_text(size = 14),
+    axis.title.y = element_text(size = 14) 
   )
 
 # Boxplot der Lebenserwartung nach Region
@@ -238,7 +242,7 @@ ggplot(year2022, aes(x = factor(Subregion, levels = unique(Subregion)), y = Tota
 
 detach(data2022)
 
-par(mfrow = c(1, 2))
+par(mfrow = c(1, 2), cex.lab = 1.2)
 # Gesamte Lebenserwartung in 2002 und 2022
 boxplot(data2002$Life_Expectancy_Overall, data2022$Life_Expectancy_Overall,
         names = c("2002", "2022"),
@@ -283,3 +287,5 @@ plot(
   pch = 1)
 
 abline(h = 0, col = "red", lwd = 1, lty = 2) 
+
+
