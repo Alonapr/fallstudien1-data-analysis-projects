@@ -46,6 +46,47 @@ num_stat <- function(data) {
 num_data <- 3:6
 num_stat(data2022[,num_data])
 
+#Korrelationskoeffizient nach Bravais-Pearson
+
+berechne_pearson <- function(x, y) {
+  
+  # Überprüfen, ob die Vektoren die gleiche Länge haben
+  if (length(x) != length(y)) {
+    stop("Die Vektoren müssen die gleiche Länge haben.")
+  }
+  
+  # Überprüfen, ob die Vektoren genügend Datenpunkte enthalten
+  if (length(x) < 2) {
+    stop("Die Vektoren müssen mindestens zwei Elemente enthalten.")
+  }
+  
+  # Berechnung der Mittelwerte
+  x_mean <- mean(x)
+  y_mean <- mean(y)
+  
+  # Zähler und Nenner berechnen
+  zaehler <- sum((x - x_mean) * (y - y_mean))
+  nenner <- sqrt(sum((x - x_mean)^2) * sum((y - y_mean)^2))
+  
+  # Verhindern von Division durch Null
+  if (nenner == 0) {
+    stop("Achtung: Division durch Null.")
+  }
+  
+  # Pearson-Korrelationskoeffizient berechnen
+  r <- zaehler / nenner
+  
+  return(r)
+}
+
+#Lebenserwartung vs. Fertilitätsrate
+berechne_pearson(Life_Expectancy_Overall, Total_Fertility_Rate)
+
+#Lebenserwartung Männer vs. Lebenserwartung Frauen
+berechne_pearson(Life_Expectancy_Male, Life_Expectancy_Female)
+
+##########################
+
 # Boxplots der Lebenserwartung (+ Unterschiede zwischen den Geschlechtern)
 par(mar = c(5, 5, 1, 2))
 boxplot(Life_Expectancy_Overall,
