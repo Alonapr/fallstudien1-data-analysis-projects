@@ -288,4 +288,24 @@ plot(
 
 abline(h = 0, col = "red", lwd = 1, lty = 2) 
 
+# Scatterplot: Lebenserwartung 2002 vs. Lebenserwartung 2022
+plot(data_2002$Life_Expectancy_Overall, data_2022$Life_Expectancy_Overall,
+     main = "Allgemeine Lebenserwartung 2002 vs. 2022",
+     xlab = "Allgemeine Lebenserwartung in 2002",
+     ylab = "Allgemeine Lebenserwartung in 2022",
+     pch = 1, xlim = c(45, 90), ylim = c(45, 90))
+
+# Hinzufügen einer Linie y = x als Referenz (zeigt, wo es keine Veränderung gab)
+abline(a = 0, b = 1, col = "red", lwd = 1, lty = 2)
+
+# Scatterplot: Fertilitätsrate 2002 vs. Fertilitätsrate 2022
+plot(data_2002$Total_Fertility_Rate, data_2022$Total_Fertility_Rate,
+     main = "Fertilitätsrate 2002 vs. 2022",
+     xlab = "Fertilitätsrate in 2002",
+     ylab = "Fertilitätsrate in 2022",
+     pch = 1, xlim = c(0, 9), ylim = c(0, 9))
+axis(1, at = seq(0, 9, by = 1))
+
+# Hinzufügen einer Linie y = x als Referenz (zeigt, wo es keine Veränderung gab)
+abline(a = 0, b = 1, col = "red", lwd = 1, lty = 2)
 

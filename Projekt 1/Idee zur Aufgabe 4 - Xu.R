@@ -95,24 +95,15 @@ data2022_noNA <- subset(data_noNA, Year == 2022)
 life_2002 <- data2002$Life_Expectancy_Overall
 life_2022 <- data2022$Life_Expectancy_Overall
 
-# Region für jedes Land aus dem Jahr 2022 extrahieren
-regions_2022 <- data2022$Region
-
-# Farben für jede Region definieren
-region_colors <- c("Africa" = "#619CFF", "Americas" = "#00BA38", 
-                   "Asia" = "#F8766D", "Europe" = "#C77CFF", "Oceania" = "#B79F00")
-
 # Scatterplot erstellen: Lebenserwartung 2002 vs Lebenserwartung 2022
 plot(life_2002, life_2022,
-     main = "Lebenserwartung 2002 vs 2022",
+     main = "Lebenserwartung 2002 vs. 2022",
      xlab = "Lebenserwartung in 2002",
      ylab = "Lebenserwartung in 2022",
-     pch = 19, xlim = c(45, 90), ylim = c(45, 90))
+     pch = 1, xlim = c(45, 90), ylim = c(45, 90))
 
 # Hinzufügen einer Linie y = x als Referenz (zeigt, wo es keine Veränderung gab)
 abline(a = 0, b = 1, col = "red", lty = 2)
-abline(v = mean(data2002_noNA$Life_Expectancy_Overall), col = "blue", lty = 2)
-abline(h = mean(data2022_noNA$Life_Expectancy_Overall), col = "blue", lty = 2)
 
 #####
 # Scatterplot der Differenz der Lebenserwartung
