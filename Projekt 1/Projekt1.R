@@ -1,16 +1,16 @@
 library(ggplot2)
 
 data <- read.csv("census_2022_2002.csv")
-# Ueberblick ueber die Daten
+
+# Überblick über die Daten
 dim(data)
-head(data)
 str(data)
 summary(data)
 
 # Entfernung von NA-Werten
 data_noNA <- na.omit(data)
 
-# Datensatz auf 2 abhaengig vom Jahr teilen
+# Datensatz auf Jahr 2002 und 2022 teilen
 data2002 <- subset(data_noNA, Year == 2002)
 dim(data2002)
 
@@ -22,24 +22,26 @@ dim(data2022)
 attach(data2022)
 
 num_stat <- function(data) {
-  var_name <- c("Gesamte Lebenserwartung", "Männliche Lebenserwartung", 
-                "Weibliche Lebenserwartung", "Fertilitätsrate")
-  result <- matrix(NA, nrow = length(data), ncol = 7)
-  colnames(result) <- c("Variable", "min", "max", "IQR", "median", 
-                        "mean", "sd")
+  var_name <- c("Gesamte Lebenserwartung", "Lebenserwartung der Männer", 
+                "Lebenserwartung der Frauen", "Fertilitätsrate")
+  result <- matrix(NA, nrow = length(data), ncol = 9)
+  colnames(result) <- c("Variable", "mean", "median", "25% Quantil", "75% Quantil", 
+                        "IQR", "min", "max", "sd")
   for(i in 1:length(data)) {
     var_data <- data[[i]]
-    Max <- max(var_data)
-    Min <- min(var_data)
-    q1 <- quantile(var_data, 0.25)
-    q3 <- quantile(var_data, 0.75)
+    
+    q1 <- quantile(var_data, 0.25, type = 2)
+    q3 <- quantile(var_data, 0.75, type = 2)
+    
     result[i, 1] <- var_name[i]
-    result[i, 2] <- round(Min, 2)
-    result[i, 3] <- round(Max,2)
-    result[i, 4] <- round(q3 - q1,2)
-    result[i, 5] <- round(median(var_data),2)
-    result[i, 6] <- round(mean(var_data),2)
-    result[i, 7] <- round(sd(var_data),2)
+    result[i, 2] <- round(mean(var_data), 2)
+    result[i, 3] <- round(median(var_data), 2)
+    result[i, 4] <- round(q1, 2)
+    result[i, 5] <- round(q3, 2)
+    result[i, 6] <- round(q3 - q1, 2)
+    result[i, 7] <- round(min(var_data), 2)
+    result[i, 8] <- round(max(var_data), 2)
+    result[i, 9] <- round(sd(var_data),2)
   } 
   return(as.data.frame(result))
 }
@@ -80,24 +82,25 @@ berechne_pearson <- function(x, y) {
 }
 
 #Lebenserwartung vs. Fertilitätsrate
-berechne_pearson(Life_Expectancy_Overall, Total_Fertility_Rate)
-#-0.7671462
+round(berechne_pearson(Life_Expectancy_Overall, Total_Fertility_Rate), 3)
+#-0.767
 
 #Lebenserwartung Männer vs. Lebenserwartung Frauen
-berechne_pearson(Life_Expectancy_Male, Life_Expectancy_Female)
-#0.9688588
+round(berechne_pearson(Life_Expectancy_Male, Life_Expectancy_Female), 3)
+#0.969
 
 ##########################
 
 # Boxplots der Lebenserwartung (+ Unterschiede zwischen den Geschlechtern)
-par(mar = c(5, 5, 1, 2))
+par(mar = c(4.2, 4, 1, 1))
 boxplot(Life_Expectancy_Overall,
         Life_Expectancy_Male,
         Life_Expectancy_Female,
-        names = c("Gesamt", "Männlich", "Weiblich"),
+        names = c("Gesamt", "Männer", "Frauen"),
         ylab = "Lebenserwartung (in Jahren)",
         xlab = "Merkmale", horizontal = FALSE, col = "lightblue")
 axis(2, at = seq(0, 100, by = 5))
+
 
 # Differenz der Lebenserwartung (Frauen - Männer)
 Diff_Lebenserwartung <- Life_Expectancy_Female - Life_Expectancy_Male
@@ -127,7 +130,7 @@ table(Subregion, Region)
 # Streudiagramm
 ggplot(data2022, aes(x = Life_Expectancy_Overall, y = Total_Fertility_Rate)) +
   geom_point() +
-  labs(x = "Gesamte Lebenserwartung",
+  labs(x = "Gesamte Lebenserwartung (in Jahren)",
        y = "Fertilitätsrate")
 
 # Zusammenhang zwischen Lebenserwartung von Frauen und Männer
@@ -135,8 +138,8 @@ ggplot(data2022, aes(x = Life_Expectancy_Overall, y = Total_Fertility_Rate)) +
 ggplot(data2022, aes(x = Life_Expectancy_Female, y = Life_Expectancy_Male)) +
   geom_point() +
   geom_abline(intercept = 0, slope = 1, color = "red", linetype = "solid") +
-  labs(x = "Weibliche Lebenserwartung",
-       y = "Männliche Lebenserwartung") +
+  labs(x = "Lebenserwartung der Frauen (in Jahren)",
+       y = "Lebenserwartung der Männer (in Jahren)") +
   theme(
     axis.title.x = element_text(size = 12),
     axis.title.y = element_text(size = 12) 
@@ -197,45 +200,11 @@ year2022 <- data2022[order(Region, Subregion), ]
 #########################
 #Boxplots
 
-#Boxplot Lebenserwartung der Männer in den Subregionen
-# Boxplot mit ggplot2, nach Region gruppiert und mit farblicher Unterscheidung der Regionen
-ggplot(year2022, aes(x = factor(Subregion, levels = unique(Subregion)), y = Life_Expectancy_Male, fill = Region)) +
-  geom_boxplot(coef = 1.5, size = 0.6) +
-  labs(title = "Lebenserwartung der Männer in den Subregionen (2022)",
-       x = "Subregion",
-       y = "Lebenserwartung",
-       fill = "Region") +  # Legende für die Regionen hinzufügen
-  theme(
-    plot.title = element_text(size = 16, face = "bold"),  # Überschrift größer und fett
-    axis.title.x = element_text(size = 14),  # x-Achsenbeschriftung größer
-    axis.title.y = element_text(size = 14, margin = margin(r = 10)),  # y-Achsenbeschriftung größer
-    axis.text.x = element_text(angle = 45, hjust = 1), # x-Achsenbeschriftung um 45 Grad drehen
-    legend.text = element_text(size = 12),  # Legendentext größer
-    legend.title = element_text(size = 14)  # Legendentitel größer
-  )
-
-
-# Boxplot Lebenserwartung der Frauen in den Subregionen
-ggplot(year2022, aes(x = factor(Subregion, levels = unique(Subregion)), y = Life_Expectancy_Female, fill = Region)) +
-  geom_boxplot(coef = 1.5, size = 0.6) +
-  labs(title = "Lebenserwartung der Frauen in den Subregionen (2022)",
-       x = "Subregion",
-       y = "Lebenserwartung",
-       fill = "Region") +  # Legende für die Regionen hinzufügen
-  theme(
-    plot.title = element_text(size = 16, face = "bold"),  # Überschrift größer und fett
-    axis.title.x = element_text(size = 14),  # x-Achsenbeschriftung größer
-    axis.title.y = element_text(size = 14, margin = margin(r = 10)),  # y-Achsenbeschriftung größer mit Abstand
-    axis.text.x = element_text(angle = 45, hjust = 1), # x-Achsenbeschriftung um 45 Grad drehen
-    legend.text = element_text(size = 12),  # Legendentext größer
-    legend.title = element_text(size = 14)  # Legendentitel größer
-  )
-
 # Gesamte Lebenserwartung in den Subregionen (2022)
 ggplot(year2022, aes(x = factor(Subregion, levels = unique(Subregion)), y = Life_Expectancy_Overall, fill = Region)) +
   geom_boxplot(coef = 1.5, size = 0.6) +
   labs(x = "Subregion",
-       y = "Gesamte Lebenserwartung",
+       y = "Gesamte Lebenserwartung (in Jahren)",
        fill = "Region:") +  # Legende für die Regionen hinzufügen
   theme(
     plot.title = element_text(size = 16, face = "bold"),
@@ -264,28 +233,10 @@ ggplot(year2022, aes(x = factor(Subregion, levels = unique(Subregion)), y = Tota
     legend.position = "top",
     legend.direction = "horizontal")
 
-#####################
-#Zusätzliche Grafik
-
-# Boxplot Differenz der Lebenserwartung (Frauen - Männer) in den Subregionen
-ggplot(year2022, aes(x = factor(Subregion, levels = unique(Subregion)), y = Life_Expectancy_Female - Life_Expectancy_Male, fill = Region)) +
-  geom_boxplot(coef = 1.5, size = 0.6) +
-  labs(title = "Differenz der Lebenserwartung in den Subregionen (2022)",
-       x = "Subregion",
-       y = "Lebenserwartung",
-       fill = "Region") +  # Legende für die Regionen hinzufügen
-  theme(
-    plot.title = element_text(size = 16, face = "bold"),  # Überschrift größer und fett
-    axis.title.x = element_text(size = 14),  # x-Achsenbeschriftung größer
-    axis.title.y = element_text(size = 14, margin = margin(r = 10)),  # y-Achsenbeschriftung größer mit Abstand
-    axis.text.x = element_text(angle = 45, hjust = 1), # x-Achsenbeschriftung um 45 Grad drehen
-    legend.text = element_text(size = 12),  # Legendentext größer
-    legend.title = element_text(size = 14)  # Legendentitel größer
-  )
-
-detach(data2022)
 
 #4 - Vergleich von Merkmalen in 2002 und 2022
+
+detach(data2022)
 
 par(mfrow = c(1, 2))
 # Gesamte Lebenserwartung in 2002 und 2022
@@ -300,17 +251,19 @@ boxplot(data2002$Total_Fertility_Rate, data2022$Total_Fertility_Rate,
         xlab = "Jahr", col = "lightblue")
 
 par(mfrow = c(1, 1))
-
 # Scatterplot der Differenz der Lebenserwartung
 
 # Differenz der Lebenserwartung (2022 - 2002) (Jahre)
-lebenserwartung_differenz = na.omit(data2022$Life_Expectancy_Overall - data2002$Life_Expectancy_Overall)
+data_2002 <- subset(data, Year == 2002)
+data_2022 <- subset(data, Year == 2022)
+lebenserwartung_differenz = na.omit(data_2022$Life_Expectancy_Overall - data_2002$Life_Expectancy_Overall)
 
+par(mar = c(4.2, 4, 2, 1))
 plot(
-  data2002_noNA$Life_Expectancy_Overall, 
+  data2002$Life_Expectancy_Overall, 
   lebenserwartung_differenz,
-  xlab = "Lebenserwartung in 2002 (Jahre)", 
-  ylab = "Differenz der Lebenserwartung (Jahre)", 
+  xlab = "Lebenserwartung in 2002 (in Jahren)", 
+  ylab = "Differenz der Lebenserwartung (in Jahren)", 
   main = "Veränderung der allgemeinen Lebenserwartung",
   pch = 1)
 
@@ -319,10 +272,10 @@ abline(h = 0, col = "red", lwd = 1, lty = 2)
 # Scatterplot der Differenz der Fertilitätsrate
 
 # Differenz der Fertilitätsrate (2022 - 2002) (Jahre)
-fertilitaetsrate_differenz = na.omit(data2022$Total_Fertility_Rate - data2002$Total_Fertility_Rate)
+fertilitaetsrate_differenz = na.omit(data_2022$Total_Fertility_Rate - data_2002$Total_Fertility_Rate)
 
 plot(
-  data2002_noNA$Total_Fertility_Rate, 
+  data2002$Total_Fertility_Rate, 
   fertilitaetsrate_differenz,
   xlab = "Fertilitätsrate in 2002", 
   ylab = "Differenz der Fertilitätsrate", 
@@ -330,5 +283,3 @@ plot(
   pch = 1)
 
 abline(h = 0, col = "red", lwd = 1, lty = 2) 
-
-
