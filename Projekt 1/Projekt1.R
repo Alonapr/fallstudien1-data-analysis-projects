@@ -97,7 +97,7 @@ boxplot(Life_Expectancy_Overall,
         names = c("Gesamt", "Männer", "Frauen"),
         ylab = "Lebenserwartung (in Jahren)",
         xlab = "Merkmale", horizontal = FALSE, col = "lightblue")
-axis(2, at = seq(0, 100, by = 5))
+
 
 
 # Differenz der Lebenserwartung (Frauen - Männer)
