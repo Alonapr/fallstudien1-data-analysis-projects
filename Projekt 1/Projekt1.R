@@ -34,13 +34,13 @@ num_stat <- function(data) {
     q3 <- quantile(var_data, 0.75, type = 2)
     
     result[i, 1] <- var_name[i]
-    result[i, 2] <- round(mean(var_data), 3)
-    result[i, 3] <- round(median(var_data), 3)
-    result[i, 4] <- round(q1, 2)
-    result[i, 5] <- round(q3, 2)
-    result[i, 6] <- round(min(var_data), 2)
-    result[i, 7] <- round(max(var_data), 2)
-    result[i, 8] <- round(sd(var_data),2)
+    result[i, 2] <- sprintf("%.3f", mean(var_data))
+    result[i, 3] <- sprintf("%.3f", median(var_data))
+    result[i, 4] <- sprintf("%.3f", q1)
+    result[i, 5] <- sprintf("%.3f", q3)
+    result[i, 6] <- sprintf("%.3f", min(var_data))
+    result[i, 7] <- sprintf("%.3f", max(var_data))
+    result[i, 8] <- sprintf("%.3f", sd(var_data))
   } 
   return(as.data.frame(result))
 }
