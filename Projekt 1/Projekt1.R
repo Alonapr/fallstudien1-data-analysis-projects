@@ -1,7 +1,5 @@
 library(ggplot2)
 
-setwd("C:/Users/alena/Documents/GitHub/Fallstudien-1/Projekt 1")
-
 data <- read.csv("census_2022_2002.csv")
 # Ueberblick ueber die Daten
 dim(data)

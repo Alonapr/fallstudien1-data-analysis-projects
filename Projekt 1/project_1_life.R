@@ -370,3 +370,25 @@ text(x = barplot_3,
      label = round(barplot_heights, 2), 
      pos = 3, cex = 0.8, col = "black")
 legend("topright", legend = c("2002", "2022"), fill = c("#0D6EDB", "#60DB7A"))
+
+
+# Scatterplot der Lebenserwartung und Differenz
+
+colnames(df_2002)[which(colnames(df_2002) == "Life_Expectancy_Overall")] <- "Life_Expectancy_2002"
+colnames(df_2022)[which(colnames(df_2022) == "Life_Expectancy_Overall")] <- "Life_Expectancy_2022"
+
+df_combined <- merge(df_2002, df_2022, by = "Country")
+
+df_combined$Lebenserwartung_Differenz <- df_combined$Life_Expectancy_2022 -
+  df_combined$Life_Expectancy_2002
+
+plot(
+  df_combined$Life_Expectancy_2002, 
+  df_combined$Lebenserwartung_Differenz,
+  xlab = "Lebenserwartung 2002 (Jahre)", 
+  ylab = "Differenz der Lebenserwartung (2022 - 2002) (Jahre)", 
+  main = "Scatterplot der Lebenserwartung und Differenz",
+  pch = 19,  
+  col = "blue"
+)
+abline(h = 0, col = "red", lwd = 1) 
