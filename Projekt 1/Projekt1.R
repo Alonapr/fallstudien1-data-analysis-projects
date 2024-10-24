@@ -24,9 +24,9 @@ attach(data2022)
 num_stat <- function(data) {
   var_name <- c("Gesamte Lebenserwartung", "Lebenserwartung der Männer", 
                 "Lebenserwartung der Frauen", "Fertilitätsrate")
-  result <- matrix(NA, nrow = length(data), ncol = 9)
-  colnames(result) <- c("Merkmal", "mean", "median", "25% Quantil", "75% Quantil", 
-                        "IQR", "min", "max", "sd")
+  result <- matrix(NA, nrow = length(data), ncol = 8)
+  colnames(result) <- c("Merkmal", "Arithm. Mittel", "Median", "25% Quantil", 
+                        "75% Quantil", "Minimum", "Maximum", "sd")
   for(i in 1:length(data)) {
     var_data <- data[[i]]
     
@@ -34,19 +34,17 @@ num_stat <- function(data) {
     q3 <- quantile(var_data, 0.75, type = 2)
     
     result[i, 1] <- var_name[i]
-    result[i, 2] <- round(mean(var_data), 2)
-    result[i, 3] <- round(median(var_data), 2)
+    result[i, 2] <- round(mean(var_data), 3)
+    result[i, 3] <- round(median(var_data), 3)
     result[i, 4] <- round(q1, 2)
     result[i, 5] <- round(q3, 2)
-    result[i, 6] <- round(q3 - q1, 2)
-    result[i, 7] <- round(min(var_data), 2)
-    result[i, 8] <- round(max(var_data), 2)
-    result[i, 9] <- round(sd(var_data),2)
+    result[i, 6] <- round(min(var_data), 2)
+    result[i, 7] <- round(max(var_data), 2)
+    result[i, 8] <- round(sd(var_data),2)
   } 
   return(as.data.frame(result))
 }
-num_data <- 3:6
-num_stat(data2022[,num_data])
+num_stat(data2022[,3:6])
 
 #Korrelationskoeffizient nach Bravais-Pearson
 
