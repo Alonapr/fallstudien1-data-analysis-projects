@@ -57,11 +57,6 @@ boxplot(Life_Expectancy_Overall,
         ylab = "Lebenserwartung (in Jahren)",
         xlab = "Merkmale", horizontal = FALSE, col = "lightblue")
 axis(2, at = seq(0, 100, by = 5))
-means <- c(mean(Life_Expectancy_Overall),
-           mean(Life_Expectancy_Male),
-           mean(Life_Expectancy_Female))
-segments(x0 = 1:3 - 0.4, y0 = means, x1 = 1:3 + 0.4, y1 = means, col = "red", lwd = 2)
-legend("bottomright", legend = "mean", fill = "red", bty = "n")
 
 # Differenz der Lebenserwartung (Frauen - Männer)
 Diff_Lebenserwartung <- Life_Expectancy_Female - Life_Expectancy_Male
