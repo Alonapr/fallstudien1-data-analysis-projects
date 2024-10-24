@@ -309,3 +309,29 @@ axis(1, at = seq(0, 9, by = 1))
 # Hinzufügen einer Linie y = x als Referenz (zeigt, wo es keine Veränderung gab)
 abline(a = 0, b = 1, col = "red", lwd = 1, lty = 2)
 
+
+#Boxplot für die Veränderung der allgemeinen Lebenserwartung (2022 - 2002)
+
+data2002_noNA$Lebenserwartung_Differenz = lebenserwartung_differenz
+
+#Regionnamen ins Deutsch
+data2002_noNA$Region[data2002_noNA$Region == "Africa"] = "Afrika"
+data2002_noNA$Region[data2002_noNA$Region == "Americas"] = "Amerika"
+data2002_noNA$Region[data2002_noNA$Region == "Asia"] = "Asien"
+data2002_noNA$Region[data2002_noNA$Region == "Europe"] = "Europa"
+data2002_noNA$Region[data2002_noNA$Region == "Oceania"] = "Ozeanien"
+
+par(mar = c(4.2, 4, 1, 1))
+
+boxplot(data2002_noNA$Lebenserwartung_Differenz ~ data2002_noNA$Region,
+        xlab = "Region", ylab = "Veränderung der Lebenserwartung", col = "lightblue")
+abline(h = 0, col = "red", lwd = 1, lty = 2)
+
+
+#Boxplot für die Veränderung der Fertilitätsrate (2022 - 2002)
+
+data2002_noNA$Fertilitaetsrate_Differenz = fertilitaetsrate_differenz
+
+boxplot(data2002_noNA$Fertilitaetsrate_Differenz ~ data2002_noNA$Region,
+        xlab = "Region", ylab = "Veränderung der Fertilität", col = "lightblue")
+abline(h = 0, col = "red", lwd = 1, lty = 2)
