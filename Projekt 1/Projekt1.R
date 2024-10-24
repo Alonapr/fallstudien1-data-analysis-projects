@@ -25,7 +25,7 @@ num_stat <- function(data) {
   var_name <- c("Gesamte Lebenserwartung", "Lebenserwartung der Männer", 
                 "Lebenserwartung der Frauen", "Fertilitätsrate")
   result <- matrix(NA, nrow = length(data), ncol = 9)
-  colnames(result) <- c("Variable", "mean", "median", "25% Quantil", "75% Quantil", 
+  colnames(result) <- c("Merkmal", "mean", "median", "25% Quantil", "75% Quantil", 
                         "IQR", "min", "max", "sd")
   for(i in 1:length(data)) {
     var_data <- data[[i]]
