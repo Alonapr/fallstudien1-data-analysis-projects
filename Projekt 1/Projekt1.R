@@ -81,9 +81,11 @@ berechne_pearson <- function(x, y) {
 
 #Lebenserwartung vs. Fertilitätsrate
 berechne_pearson(Life_Expectancy_Overall, Total_Fertility_Rate)
+#-0.7671462
 
 #Lebenserwartung Männer vs. Lebenserwartung Frauen
 berechne_pearson(Life_Expectancy_Male, Life_Expectancy_Female)
+#0.9688588
 
 ##########################
 
@@ -296,5 +298,37 @@ boxplot(data2002$Life_Expectancy_Overall, data2022$Life_Expectancy_Overall,
 boxplot(data2002$Total_Fertility_Rate, data2022$Total_Fertility_Rate,
         names = c("2002", "2022"), ylab = "Fertilitätsrate", 
         xlab = "Jahr", col = "lightblue")
+
+par(mfrow = c(1, 1))
+
+# Scatterplot der Differenz der Lebenserwartung
+
+# Differenz der Lebenserwartung (2022 - 2002) (Jahre)
+lebenserwartung_differenz = na.omit(data2022$Life_Expectancy_Overall - data2002$Life_Expectancy_Overall)
+
+plot(
+  data2002_noNA$Life_Expectancy_Overall, 
+  lebenserwartung_differenz,
+  xlab = "Lebenserwartung in 2002 (Jahre)", 
+  ylab = "Differenz der Lebenserwartung (Jahre)", 
+  main = "Veränderung der allgemeinen Lebenserwartung",
+  pch = 1)
+
+abline(h = 0, col = "red", lwd = 1, lty = 2) 
+
+# Scatterplot der Differenz der Fertilitätsrate
+
+# Differenz der Fertilitätsrate (2022 - 2002) (Jahre)
+fertilitaetsrate_differenz = na.omit(data2022$Total_Fertility_Rate - data2002$Total_Fertility_Rate)
+
+plot(
+  data2002_noNA$Total_Fertility_Rate, 
+  fertilitaetsrate_differenz,
+  xlab = "Fertilitätsrate in 2002", 
+  ylab = "Differenz der Fertilitätsrate", 
+  main = "Veränderung der Fertilitätsrate",
+  pch = 1)
+
+abline(h = 0, col = "red", lwd = 1, lty = 2) 
 
 
