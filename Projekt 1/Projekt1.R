@@ -310,26 +310,26 @@ abline(a = 0, b = 1, col = "red", lwd = 1, lty = 2)
 
 #Boxplot für die Veränderung der allgemeinen Lebenserwartung (2022 - 2002)
 
-data2002_noNA$Lebenserwartung_Differenz = lebenserwartung_differenz
+data2002$Lebenserwartung_Differenz = lebenserwartung_differenz
 
 #Regionnamen ins Deutsch
-data2002_noNA$Region[data2002_noNA$Region == "Africa"] = "Afrika"
-data2002_noNA$Region[data2002_noNA$Region == "Americas"] = "Amerika"
-data2002_noNA$Region[data2002_noNA$Region == "Asia"] = "Asien"
-data2002_noNA$Region[data2002_noNA$Region == "Europe"] = "Europa"
-data2002_noNA$Region[data2002_noNA$Region == "Oceania"] = "Ozeanien"
+data2002$Region[data2002$Region == "Africa"] = "Afrika"
+data2002$Region[data2002$Region == "Americas"] = "Amerika"
+data2002$Region[data2002$Region == "Asia"] = "Asien"
+data2002$Region[data2002$Region == "Europe"] = "Europa"
+data2002$Region[data2002$Region == "Oceania"] = "Ozeanien"
 
 par(mar = c(4.2, 4, 1, 1))
 
-boxplot(data2002_noNA$Lebenserwartung_Differenz ~ data2002_noNA$Region,
+boxplot(data2002$Lebenserwartung_Differenz ~ data2002$Region,
         xlab = "Region", ylab = "Veränderung der Lebenserwartung", col = "lightblue")
 abline(h = 0, col = "red", lwd = 1, lty = 2)
 
 
 #Boxplot für die Veränderung der Fertilitätsrate (2022 - 2002)
 
-data2002_noNA$Fertilitaetsrate_Differenz = fertilitaetsrate_differenz
+data2002$Fertilitaetsrate_Differenz = fertilitaetsrate_differenz
 
-boxplot(data2002_noNA$Fertilitaetsrate_Differenz ~ data2002_noNA$Region,
+boxplot(data2002$Fertilitaetsrate_Differenz ~ data2002$Region,
         xlab = "Region", ylab = "Veränderung der Fertilität", col = "lightblue")
 abline(h = 0, col = "red", lwd = 1, lty = 2)
