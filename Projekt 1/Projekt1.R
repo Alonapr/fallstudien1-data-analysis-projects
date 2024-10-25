@@ -21,6 +21,21 @@ dim(data2022)
 #1 - Haeufigkeitsverteilungen der Merkmale + Unterschiede zwischen Geschlechter
 attach(data2022)
 
+# num_stat - Funktion zur Berechnung statistischer Kennzahlen für den Datensatz
+#             aus der IDB
+#
+# Eingabe:
+#   data         - Data Frame aus dem IDB-Datensatz mit den Spalten
+#                   Life_Expectancy_Overall, Life_Expectancy_Male,
+#                   Life_Expectancy_Female und Total_Fertility_Rate
+#
+# Ausgabe:
+#   Data Frame: Data Frame mit den Zeilen "Gesamte Lebenserwartung",
+#   "Lebenserwartung der Männer", "Lebenserwartung der Frauen" und 
+#   "Fertilitätsrate" und den berechneten Kennzahlen in den Spalten
+#   (arithmetisches Mittel, Median, 25%-Quantil, 75%-Quantil, Minimum, Maximum
+#   und Standardabweichung)
+
 num_stat <- function(data) {
   var_name <- c("Gesamte Lebenserwartung", "Lebenserwartung der Männer", 
                 "Lebenserwartung der Frauen", "Fertilitätsrate")
