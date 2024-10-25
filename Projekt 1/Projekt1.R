@@ -48,6 +48,16 @@ num_stat(data2022[,3:6])
 
 #Korrelationskoeffizient nach Bravais-Pearson
 
+# berechne_pearson - Funktion zur Berechnung des Korrelationskoeffizienten nach
+#                   Bravais-Pearson
+#
+# Eingabe:
+#   x         - Datenvektor mit n Beobachtungen
+#   y         - Datenvektor mit n Beobachtungen
+#
+# Ausgabe:
+#   Skalar: Korrelationskoeffizient nach Bravais-Pearson
+
 berechne_pearson <- function(x, y) {
   
   # Überprüfen, ob die Vektoren die gleiche Länge haben
