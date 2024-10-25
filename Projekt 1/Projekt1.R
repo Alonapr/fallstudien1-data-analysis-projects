@@ -240,19 +240,6 @@ ggplot(year2022, aes(x = factor(Subregion, levels = unique(Subregion)), y = Tota
 
 detach(data2022)
 
-par(mfrow = c(1, 2), cex.lab = 1.2)
-# Gesamte Lebenserwartung in 2002 und 2022
-boxplot(data2002$Life_Expectancy_Overall, data2022$Life_Expectancy_Overall,
-        names = c("2002", "2022"),
-        ylab = "Gesamte Lebenserwartung (in Jahren)", 
-        xlab = "Jahr", col = "lightblue")
-
-# Fertilitätsrate in 2002 und 2022
-boxplot(data2002$Total_Fertility_Rate, data2022$Total_Fertility_Rate,
-        names = c("2002", "2022"), ylab = "Fertilitätsrate", 
-        xlab = "Jahr", col = "lightblue")
-
-par(mfrow = c(1, 1))
 # Scatterplot der Differenz der Lebenserwartung
 
 # Differenz der Lebenserwartung (2022 - 2002) (Jahre)
@@ -286,27 +273,6 @@ plot(
 
 abline(h = 0, col = "red", lwd = 1, lty = 2) 
 
-# Scatterplot: Lebenserwartung 2002 vs. Lebenserwartung 2022
-plot(data_2002$Life_Expectancy_Overall, data_2022$Life_Expectancy_Overall,
-     main = "Allgemeine Lebenserwartung 2002 vs. 2022",
-     xlab = "Allgemeine Lebenserwartung in 2002",
-     ylab = "Allgemeine Lebenserwartung in 2022",
-     pch = 1, xlim = c(45, 90), ylim = c(45, 90))
-
-# Hinzufügen einer Linie y = x als Referenz (zeigt, wo es keine Veränderung gab)
-abline(a = 0, b = 1, col = "red", lwd = 1, lty = 2)
-
-# Scatterplot: Fertilitätsrate 2002 vs. Fertilitätsrate 2022
-plot(data_2002$Total_Fertility_Rate, data_2022$Total_Fertility_Rate,
-     main = "Fertilitätsrate 2002 vs. 2022",
-     xlab = "Fertilitätsrate in 2002",
-     ylab = "Fertilitätsrate in 2022",
-     pch = 1, xlim = c(0, 9), ylim = c(0, 9))
-axis(1, at = seq(0, 9, by = 1))
-
-# Hinzufügen einer Linie y = x als Referenz (zeigt, wo es keine Veränderung gab)
-abline(a = 0, b = 1, col = "red", lwd = 1, lty = 2)
-
 
 #Boxplot für die Veränderung der allgemeinen Lebenserwartung (2022 - 2002)
 
@@ -331,5 +297,5 @@ abline(h = 0, col = "red", lwd = 1, lty = 2)
 data2002$Fertilitaetsrate_Differenz = fertilitaetsrate_differenz
 
 boxplot(data2002$Fertilitaetsrate_Differenz ~ data2002$Region,
-        xlab = "Region", ylab = "Veränderung der Fertilität", col = "lightblue")
+        xlab = "Region", ylab = "Veränderung der Fertilitätsrate", col = "lightblue")
 abline(h = 0, col = "red", lwd = 1, lty = 2)
