@@ -5,8 +5,10 @@ data <- read.csv("census_2022_2002.csv")
 # Überblick über die Daten
 dim(data)
 str(data)
-summary(data)
+summary(data) # 7 NA-Werten in kardinalen Merkmalen
 
+# Länder mit fehlenden Werten in gesamten Lebenserwartung
+subset(data, is.na(Life_Expectancy_Overall), select = Country)
 # Entfernung von NA-Werten
 data_noNA <- na.omit(data)
 
