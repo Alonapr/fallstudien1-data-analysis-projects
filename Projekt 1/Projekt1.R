@@ -1,16 +1,12 @@
 library(ggplot2)
-library(knitr)
-library(kableExtra)
 
 data <- read.csv("census_2022_2002.csv")
 
 # Überblick über die Daten
 dim(data)
 str(data)
-summary(data) # 7 NA-Werten in kardinalen Merkmalen
+summary(data)
 
-# Länder mit fehlenden Werten in gesamten Lebenserwartung
-subset(data, is.na(Life_Expectancy_Overall), select = Country)
 # Entfernung von NA-Werten
 data_noNA <- na.omit(data)
 
@@ -34,10 +30,9 @@ attach(data2022)
 #                   Life_Expectancy_Female und Total_Fertility_Rate
 #
 # Ausgabe:
-#   Latex-Code: eine Tabelle im LaTeX-Format mit den Zeilen 
-#   "Gesamte Lebenserwartung", "Lebenserwartung der Männer", 
-#   "Lebenserwartung der Frauen" und "Fertilitätsrate" 
-#   und den berechneten Kennzahlen in den Spalten
+#   Data Frame: Data Frame mit den Zeilen "Gesamte Lebenserwartung",
+#   "Lebenserwartung der Männer", "Lebenserwartung der Frauen" und 
+#   "Fertilitätsrate" und den berechneten Kennzahlen in den Spalten
 #   (arithmetisches Mittel, Median, 25%-Quantil, 75%-Quantil, Minimum, Maximum
 #   und Standardabweichung)
 
@@ -45,8 +40,8 @@ num_stat <- function(data) {
   var_name <- c("Gesamte Lebenserwartung", "Lebenserwartung der Männer", 
                 "Lebenserwartung der Frauen", "Fertilitätsrate")
   result <- matrix(NA, nrow = length(data), ncol = 8)
-  colnames(result) <- c("Variable", "$\\bar{x}$", "$\\tilde{x}$", "$x_{0.25}$", 
-                        "$x_{0.75}$", "$x_{\\text{min}}$", "$x_{\\text{max}}$", "$s$")
+  colnames(result) <- c("Merkmal", "Arithm. Mittel", "Median", "25% Quantil", 
+                        "75% Quantil", "Minimum", "Maximum", "sd")
   for(i in 1:length(data)) {
     var_data <- data[[i]]
     
@@ -62,10 +57,7 @@ num_stat <- function(data) {
     result[i, 7] <- sprintf("%.3f", max(var_data))
     result[i, 8] <- sprintf("%.3f", sd(var_data))
   } 
-  result_df <- as.data.frame(result)
-  
-  kable(result_df, escape = FALSE, booktabs = TRUE, format = "latex") %>%
-    kable_styling(latex_options = "hold_position")
+  return(as.data.frame(result))
 }
 num_stat(data2022[,3:6])
 
