@@ -272,14 +272,13 @@ data_2002 <- subset(data, Year == 2002)
 data_2022 <- subset(data, Year == 2022)
 lebenserwartung_differenz = na.omit(data_2022$Life_Expectancy_Overall - data_2002$Life_Expectancy_Overall)
 
-par(mar = c(4.2, 4, 2, 1))
+par(mar = c(4.2, 4, 1, 1))
 plot(
   data2002$Life_Expectancy_Overall, 
   lebenserwartung_differenz,
   xlab = "Lebenserwartung in 2002 (in Jahren)", 
-  ylab = "Differenz der Lebenserwartung (in Jahren)", 
-  main = "Veränderung der allgemeinen Lebenserwartung",
-  pch = 1)
+  ylab = "Differenz der Lebenserwartung (in Jahren)",
+  pch = 1, cex.lab = 1.1)
 
 abline(h = 0, col = "red", lwd = 1, lty = 2) 
 
@@ -292,9 +291,8 @@ plot(
   data2002$Total_Fertility_Rate, 
   fertilitaetsrate_differenz,
   xlab = "Fertilitätsrate in 2002", 
-  ylab = "Differenz der Fertilitätsrate", 
-  main = "Veränderung der Fertilitätsrate",
-  pch = 1)
+  ylab = "Differenz der Fertilitätsrate",
+  pch = 1, cex.lab = 1.2)
 
 abline(h = 0, col = "red", lwd = 1, lty = 2) 
 
