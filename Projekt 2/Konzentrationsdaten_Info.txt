@@ -1,0 +1,26 @@
+gruppe
+	- Gruppenzughörigkeit: Gruppe 1 = GU & GU, Gruppe 2 = UG & UG.
+
+durchgang
+	- Erster oder zweiter Durchgang. 
+
+test_typ
+	- Ob GU oder UG getestet wird.
+
+B
+	- Bearbeitungzeit (Sekunden)
+
+AR
+	- Anzahl richtiger Zeichen
+	
+AA
+	- Anzahl ausgelassener (richtiger) Zeichen
+
+AF
+	- Anzahl falscher Zeichen
+
+KL
+	- Konzentrationsleistung: Anzahl korrekter Zeichen pro Minute: KL = (AR-AA-AF)*60/B
+
+id
+	- (Anonymisierte) Identifikationsnummer der Teilnehmenden

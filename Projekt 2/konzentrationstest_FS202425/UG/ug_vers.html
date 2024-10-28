@@ -1,0 +1,287 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Language" content="de">
+   <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+   <meta name="Author" content="Dr. Bernhard Jacobs">
+   <meta name="GENERATOR" content="Mozilla/4.6 [de] (Win95; I) [Netscape]">
+   <title>Konzentrationstest: erst ungerade, dann gerade Ziffer</title>
+   <link rel="stylesheet" type="text/css" href="formate.css">   
+
+<style type="text/css">
+
+ input
+ { 
+ /*width:35px;*/
+ font-size:14pt;
+ }
+ 
+ 
+</style>
+
+<script language="JavaScript">
+<!-- 
+ 
+var richtig=0
+var falsch =0
+var richtiganzahl=0
+
+var myzeit = 0
+var myfalsch = 0
+var myrichtig = 0
+
+var sekunden=1
+var trial=0
+var maxtrial=1 
+ 
+ 
+function setzahlen()
+{
+  ausgangswerte=new Array(101)
+  myarray=new Array(101)
+  reihenfolge=new Array(101)
+  for (i=1;i<=16;i++)
+   if (i<=4)
+  {ausgangswerte[i]=1}
+   else
+  {ausgangswerte[i]=2}
+
+   myarray=zufallsziehung(16,16)
+   for (i=1;i<=16;i++)
+   {reihenfolge[i]=ausgangswerte [myarray[i]]}
+   return reihenfolge
+
+}
+//------- zieht eine Zufallszahl im Bereich 1 bis maxzahl---------
+function randomizeZahl (maxzahl) 
+ {
+  var zufallszahl= Math.ceil(Math.random()*maxzahl) 
+  return zufallszahl
+ }  
+
+//-------Ordnet Zahlen von 1 bis n in einer zufälligen Reihenfolge an---------
+function zufallsanordnung (n)
+  {
+  var liste1Array = new Array()
+  var liste2Array = new Array()
+  for (i=1;i<=n;i++) 
+    {
+     liste1Array [i] = i 
+     liste2Array [i] = i 
+    }
+  maxzahl=n
+  for (maxzahl=n;maxzahl>=1;maxzahl--) 
+    {
+      zufallszahl=randomizeZahl (maxzahl) 
+      liste1Array[maxzahl]=liste2Array[zufallszahl]
+      liste2Array[zufallszahl]=liste2Array[maxzahl]
+      liste2Array[maxzahl]=liste2Array[zufallszahl]
+     }
+  
+  return liste1Array
+  }
+
+//-----zieht aus dem Universum N nach Zufall n Zufallszahlen -------
+function zufallsziehung (n,N)
+{
+   var stichprobeArray=new Array(n)
+   var universumArray=new Array(N)
+   universumArray=zufallsanordnung(N)
+   for (i=1;i<=n;i++) 
+    {stichprobeArray[i]=universumArray[i]
+    
+   }
+   return stichprobeArray
+}
+
+ 
+
+
+function stopzeit (sekunden)
+  {   
+    sekunden=sekunden*1000
+    setTimeout (zeitkonsequenz,sekunden)
+  }
+
+function zeitkonsequenz ()
+  {
+   settask ()
+  }
+
+function settask()
+{
+
+ziel = [12,14,16,18,32,34,36,38,52,54,56,58,72,74,76,78,92,94,96,98]
+ zielmenge=20
+ distraktor = [21,23,25,27,29,41,43,45,47,49,61,63,65,67,69,81,83,85,87,89,13,15,17,19,31,35,37,39,51,53,57,59,71,73,75,79,91,93,95,97,22,24,26,28,42,44,46,48,62,64,66,68,82,84,86,88,24,46,68,82,64] 
+ distraktormenge=61
+ zahlenreihenfolge=new Array(101)
+ zahlenreihenfolge=setzahlen()
+ zeile='<center>'
+ zeile+="<h3>Erste Ziffer ungerade <br> zweite Ziffer gerade!</h3><p>"
+ zeile+="<form name=myform method=post><table><tr>"
+
+
+ k=0
+ for (j=0;j<4;j++)
+  {
+  for (i=0;i<4;i++)
+    { k=k+1
+      welchezahl= zahlenreihenfolge[k]
+      hilfzufall = Math.ceil(Math.random()*10)-1 
+      hilfname="button"+k
+      
+      if (welchezahl==1)
+        {
+          hilfzufall = Math.ceil(Math.random()*zielmenge)-1 
+          zufallszahl=ziel[hilfzufall]
+          richtiganzahl=richtiganzahl+1
+          
+          zeile+="<td align=center> <input type=button name="+hilfname+" style='font-size:14pt' onclick=auswerten(1,'"+hilfname+"') value="+zufallszahl+">  </td>"
+        
+        }
+       else
+
+         {hilfzufall = Math.ceil(Math.random()*distraktormenge)-1 
+         zufallszahl=distraktor[hilfzufall]
+         zeile+="<td align=cemter> <input type=button name="+hilfname+" style='font-size:14pt' onclick=auswerten(0,'"+hilfname+"') value="+zufallszahl+"> </td>"
+         }
+          
+      
+     }
+    zeile+="<tr>"
+   }
+  zeile+="</table>"
+  zeile+='<br><input type=button name=bestaetigen value="Bearbeitung bestätigen!" onclick=getresult()>'
+  zeile+='<input type=hidden name=p_richtig><input type=hidden name=a_falsch><input type=hidden name=zeit></form>'
+  
+  Jetzt = new Date(); 
+  Start = Jetzt.getTime();  
+ 
+  document.getElementById('testen').innerHTML=zeile
+  window.defaultStatus="konzentrationstest"
+  
+   
+}
+        
+
+function auswerten(zahl,hilfname) 
+    { 
+        hilfmir ='document.myform.'+hilfname+'.disabled=true';eval(hilfmir); 
+        //hilfmir ='document.myform.'+hilfname+'.style="background-color:#E0E0E0"';eval(hilfmir); 
+
+        if (zahl==1)
+          {richtig=richtig+1;  } 
+           else 
+          {falsch = falsch+1} 
+    } 
+        
+function getresult () 
+    { 
+        zeitende=new Date(); 
+        zeitdauer=(zeitende.getTime()-Start)/1000; 
+        document.myform.p_richtig.value=Math.round((richtig/richtiganzahl)*100); 
+        document.myform.a_falsch.value=falsch; 
+        document.myform.zeit.value=Math.round(zeitdauer); 
+        document.mydaten.daten.value+=document.myform.p_richtig.value+"\t"+document.myform.a_falsch.value+"\t"+document.myform.zeit.value+"\t"
+        
+        myzeit+=zeitdauer
+        myfalsch+=falsch
+        myrichtig+=Math.round((richtig/richtiganzahl)*100); 
+        
+        go()
+        
+     } 
+        
+function go ()
+  {
+  
+             
+     if (trial==0){document.getElementById('show').innerHTML =""}
+   
+     if (trial < maxtrial)
+     
+      {
+        trial=trial+1
+        richtig=0
+        falsch =0
+        richtiganzahl=0
+        document.getElementById('testen').innerHTML="<center><font size=5 >--- Achtung, Probeduchgang --- </font></center>"
+        stopzeit (1.5)
+      }  
+        
+  
+     else
+     {
+      
+      
+      
+      document.mydaten.zeit.value=Math.round (myzeit/maxtrial)
+      document.mydaten.richtig.value=Math.round (myrichtig/maxtrial)
+      document.mydaten.falsch.value= Math.round ((myfalsch/maxtrial)*10)/10
+      
+      
+      
+      if ((richtig==4) && (falsch==0))
+      
+        {
+           //alert("Sie haben alles richtig gemacht\n\n Jetzt beginnt der eigentlich Test")
+           message=""
+           message+="<center><p>Sie haben alles richtig gemacht"
+           message+="<form><input type=button value='direkt zum eigentlichen Test' onclick='location.href=\"ug.html\"'></form></center>"
+           document.getElementById('show').innerHTML = message
+           document.mydaten.anweisung.disabled=true
+           document.myform.bestaetigen.disabled=true
+ 
+           
+        }
+        else
+        {
+          message=""
+           message+="<center><p>Sie haben was vergessen und/oder etwas falsch angeklickt. <br> Überprüfen Sie Ihre Angaben! <p> Fordern Sie danach noch ein Probebeispiel an!</center>"
+            
+           document.getElementById('show').innerHTML = message
+           trial=0
+           
+           document.myform.bestaetigen.disabled=true
+
+
+                    
+        }
+
+                  
+     }
+    
+  }       
+        
+
+//-->
+</script>
+</head>
+  <body text="#000000" bgcolor="#E0E0E0" link="#0000FF" vlink="#800080" alink="#FF0000" >
+   <form name=mydaten method=post>
+     <input type=hidden name=daten value="">
+     <input type=hidden name=zeit value="">
+     <input type=hidden name=richtig value="">
+     <input type=hidden name=falsch value="">
+
+
+
+ 
+
+  <center>
+  
+   
+   <font size="5">Probebeispiel mit insgesamt 16 Zahlen</font><p>
+  
+   
+   <input type=button name=anweisung value="Probebeispiel anfordern" onclick="go()"></p>
+		</center>
+   </form>
+  
+  <span id="testen"></span>
+  <span id="show"></span>
+
+
+</body>
+</html>

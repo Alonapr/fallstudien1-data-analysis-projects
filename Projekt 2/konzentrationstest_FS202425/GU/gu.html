@@ -1,0 +1,296 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Dr. Bernhard Jacobs">
+   <meta name="GENERATOR" content="Mozilla/4.6 [de] (Win95; I) [Netscape]">
+   <link rel="stylesheet" type="text/css" href="formate.css">   
+   <title>Konzentrationstest GU erste Ziffer gerade, zweite Ziffer ungerade</title>
+
+<style type="text/css">
+
+ input
+ { 
+ /*width:35px;*/
+ font-size:14pt;
+ }
+ 
+ .myfeld
+ {
+  background-color:#E0E0E0;
+ }
+ 
+ hr
+ {
+ width:500px;
+ text-align:left;
+ }
+ 
+ td
+ {
+  text-align:right;
+ }
+</style>
+
+<script language="JavaScript">
+<!-- 
+ 
+var richtig=0
+var falsch =0
+var richtiganzahl=0
+
+var myzeit = 0
+var myfalsch = 0
+var myrichtig = 0
+
+var sekunden=1
+var trial=0
+
+//--maxtrial entspricht der Anzahl der Testdurchgänge und kann verändert werden
+//--maxtrial=1 ergibt etwa lediglich einen Testdurchgang.
+
+var maxtrial=1 
+
+
+function mydatum ()
+ {
+  mydate=new Date()
+  datum=mydate.toLocaleString();
+  return (datum);
+ }
+
+ 
+function setzahlen()
+{
+  ausgangswerte=new Array(101)
+  myarray=new Array(101)
+  reihenfolge=new Array(101)
+  for (i=1;i<=100;i++)
+   if (i<=25)
+  {ausgangswerte[i]=1}
+   else
+  {ausgangswerte[i]=2}
+
+   myarray=zufallsziehung(100,100)
+   for (i=1;i<=100;i++)
+   {reihenfolge[i]=ausgangswerte [myarray[i]]}
+   return reihenfolge
+
+}
+//------- zieht eine Zufallszahl im Bereich 1 bis maxzahl---------
+function randomizeZahl (maxzahl) 
+ {
+  var zufallszahl= Math.ceil(Math.random()*maxzahl) 
+  return zufallszahl
+ }  
+
+//-------Ordnet Zahlen von 1 bis n in einer zufälligen Reihenfolge an---------
+function zufallsanordnung (n)
+  {
+  var liste1Array = new Array()
+  var liste2Array = new Array()
+  for (i=1;i<=n;i++) 
+    {
+     liste1Array [i] = i 
+     liste2Array [i] = i 
+    }
+  maxzahl=n
+  for (maxzahl=n;maxzahl>=1;maxzahl--) 
+    {
+      zufallszahl=randomizeZahl (maxzahl) 
+      liste1Array[maxzahl]=liste2Array[zufallszahl]
+      liste2Array[zufallszahl]=liste2Array[maxzahl]
+      liste2Array[maxzahl]=liste2Array[zufallszahl]
+     }
+  
+  return liste1Array
+  }
+
+//-----zieht aus dem Universum N nach Zufall n Zufallszahlen -------
+function zufallsziehung (n,N)
+{
+   var stichprobeArray=new Array(n)
+   var universumArray=new Array(N)
+   universumArray=zufallsanordnung(N)
+   for (i=1;i<=n;i++) 
+    {stichprobeArray[i]=universumArray[i]
+    
+   }
+   return stichprobeArray
+}
+
+ 
+
+
+function stopzeit (sekunden)
+  {   
+    sekunden=sekunden*1000
+    setTimeout (zeitkonsequenz,sekunden)
+  }
+
+function zeitkonsequenz ()
+  {
+   settask ()
+  }
+
+function settask()
+{
+
+ ziel = [21,23,25,27,29,41,43,45,47,49,61,63,65,67,69,81,83,85,87,89]
+ zielmenge=20
+ distraktor = [12,14,16,18,32,34,36,38,52,54,56,58,72,74,76,78,92,94,96,98,13,15,17,19,31,35,37,39,51,53,57,59,71,73,75,79,91,93,95,97,22,24,26,28,42,44,46,48,62,64,66,68,82,84,86,88,24,46,68,82,64] 
+ distraktormenge=61
+ zahlenreihenfolge=new Array(101)
+ zahlenreihenfolge=setzahlen()
+ zeile='<center>'
+ zeile+="<h3>Erste Ziffer gerade <br> zweite Ziffer ungerade!</h3><p>"
+ zeile+="<form name=myform method=post><table><tr>"
+
+
+ k=0
+ for (j=0;j<10;j++)
+  {
+  for (i=0;i<10;i++)
+    { k=k+1
+      welchezahl= zahlenreihenfolge[k]
+      hilfzufall = Math.ceil(Math.random()*10)-1 
+      hilfname="button"+k
+      
+      if (welchezahl==1)
+        {
+          hilfzufall = Math.ceil(Math.random()*zielmenge)-1 
+          zufallszahl=ziel[hilfzufall]
+          richtiganzahl=richtiganzahl+1
+          
+          zeile+="<td align=center> <input type=button name="+hilfname+" style='font-size:14pt' onclick=auswerten(1,'"+hilfname+"') value="+zufallszahl+">  </td>"
+        
+        }
+       else
+
+         {hilfzufall = Math.ceil(Math.random()*distraktormenge)-1 
+         zufallszahl=distraktor[hilfzufall]
+         zeile+="<td align=cemter> <input type=button name="+hilfname+" style='font-size:14pt' onclick=auswerten(0,'"+hilfname+"') value="+zufallszahl+"> </td>"
+         }
+          
+      
+     }
+    zeile+="<tr>"
+   }
+  zeile+="</table>"
+  zeile+='<br><input type=button value="Bearbeitung bestätigen!" onclick=getresult()>'
+  zeile+='<input type=hidden name=a_richtig><input type=hidden name=a_falsch><input type=hidden name=zeit></form>'
+  
+  Jetzt = new Date(); 
+  Start = Jetzt.getTime();  
+ 
+  document.getElementById('testen').innerHTML=zeile
+  window.defaultStatus="konzentrationstest"
+  
+   
+}
+        
+
+function auswerten(zahl,hilfname) 
+    { 
+        hilfmir ='document.myform.'+hilfname+'.disabled=true';eval(hilfmir); 
+        //hilfmir ='document.myform.'+hilfname+'.style="background-color:#E0E0E0"';eval(hilfmir); 
+
+        if (zahl==1)
+          {richtig=richtig+1;  } 
+           else 
+          {falsch = falsch+1} 
+    } 
+        
+function getresult () 
+    { 
+        zeitende=new Date(); 
+        zeitdauer=(zeitende.getTime()-Start)/1000; 
+        document.myform.a_richtig.value=richtig; 
+        document.myform.a_falsch.value=falsch; 
+        document.myform.zeit.value=Math.round(zeitdauer); 
+        document.mydaten.daten.value+=document.myform.a_richtig.value+"\t"+document.myform.a_falsch.value+"\t"+document.myform.zeit.value+"\t"
+        
+        myzeit+=zeitdauer
+        myfalsch+=falsch
+        myrichtig+=richtig; 
+        
+        go()
+        
+     } 
+        
+function go ()
+  {
+  
+         
+     if (trial < maxtrial)
+     
+      {
+        trial=trial+1
+        richtig=0
+        falsch =0
+        richtiganzahl=0
+        document.getElementById('testen').innerHTML="<center><font size=5 >--- Achtung, Durchgang Nr. "+trial+" --- </font></center>"
+        stopzeit (1.5)
+      }  
+        
+  
+     else
+     {
+      
+      
+      
+      myzeit=myzeit/maxtrial
+      myzeit=myzeit.toFixed(1)
+      myrichtig=myrichtig/maxtrial
+      myrichtig=myrichtig.toFixed(1)
+      myfalsch=myfalsch/maxtrial
+      myfalsch=myfalsch.toFixed(1)
+      auslassungen= 25-myrichtig
+      auslassungen=auslassungen.toFixed(1)
+      k_pro_minute=( myrichtig - (25-myrichtig)- myfalsch ) *60/myzeit
+      k_pro_minute=k_pro_minute.toFixed(1)
+      
+      document.mydaten.zeit.value = myzeit
+      document.mydaten.richtig.value=myrichtig
+      document.mydaten.falsch.value= myfalsch
+      
+      
+      
+      document.mydaten.daten.value = mydatum()+ "\t"+document.mydaten.daten.value+"\t"+myzeit+"\t"+k_pro_minute+"\n"
+      
+      // für online Erhebungen könnte man nachfolgenden Befehl verwenden
+      //document.mydaten.submit()
+
+    
+     zeile=""
+     zeile+='<blockquote> <font size="4">Ergebnisse im Konzentrationstest <b>GU</b> <br>	Erste Ziffer gerade, zweite Ziffer ungerade</font> '    
+     zeile+='<br>insgesamt '+maxtrial+' Testdurchgänge  <hr align=left>Datum: '+mydatum()+'<p> ' 
+     zeile+='<table border="1" id="table1" cellspacing="0"><tr><td><b>Bearbeitungszeit in Sekunden (B)</b>&nbsp; </td><td><b>'+myzeit+'</b></td></tr>'
+     zeile+='<tr><td>Anzahl richtiger Zeichen&nbsp; (AR)</td><td>'+myrichtig+'</td></tr>'
+     zeile+='<tr><td>Anzahl Auslassungen (AA)&nbsp; </td><td>'+auslassungen+'</td></tr>'
+     zeile+='<tr><td>Anzahl falsch angeklickter Zeichen (AF)&nbsp; </td><td>'+myfalsch+'</td></tr>'	
+     zeile+='<tr><td><b>Konzentrationsleistung (KL)<br>	Anzahl korrekter Zeichen pro Minute</b>&nbsp; </td><td><b>'+k_pro_minute+'</b></td></tr>'
+     zeile+='<tr><td>KL = (AR-AA-AF)*60/B</td><td>&nbsp;</td></tr></table><p><hr align=left><p><textarea class=myfeld cols=50, rows=4 >'+document.mydaten.daten.value+'</textarea></blockquote>'    
+     document.getElementById('testen').innerHTML=zeile  
+    
+     }
+  }       
+        
+
+//-->
+</script>
+</head>
+  <body text="#000000" bgcolor="#E0E0E0" link="#0000FF" vlink="#800080" alink="#FF0000" onload="go()">
+  <span id="testen"></span>
+  <form name=mydaten method=post action="gu.php">
+     <input type=hidden name=daten value="">
+     <input type=hidden name=zeit value="">
+     <input type=hidden name=richtig value="">
+     <input type=hidden name=falsch value="">
+
+
+
+  </form>
+
+</body>
+</html>
