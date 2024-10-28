@@ -3,7 +3,7 @@ library(car)
 df <- read.table("Konzentrationsdaten.txt", header=TRUE)
 head(df)
 
-# Vorbereitung von Daten
+# Vorbereitung von Daten:
 
 # Entfernen der Zeile mit Extremwerten:
 df <- df[df$id != "14",]
@@ -16,19 +16,23 @@ df$test_typ <- as.factor(df$test_typ)
 
 
 # Aufgabe 1
+# Zwei unverbundene Stichproben
 
 df_durchgang1 <- df[df$durchgang == "1", ]
-
-boxplot(df_durchgang1[df_durchgang1$test_typ == "gu", ]$KL,
-        df_durchgang1[df_durchgang1$test_typ == "ug", ]$KL,
+erster_durchgang_gu_kl <- df_durchgang1[df_durchgang1$test_typ == "gu", ]$KL
+erster_durchgang_ug_kl <- df_durchgang1[df_durchgang1$test_typ == "ug", ]$KL
+  
+# Deskriptive Analyse
+boxplot(erster_durchgang_gu_kl,
+        erster_durchgang_ug_kl,
         names = c("gu", "ug"),
         ylab = "KL",
         xlab = "Aufgabe für den ersten Durchgang", horizontal = FALSE, col = "lightblue")
 
-hist(df_durchgang1[df_durchgang1$test_typ == "gu", ]$KL, xlab = "KL für gu", 
+hist(erster_durchgang_gu_kl, xlab = "KL für gu", 
      ylab = "Relative Häufigkeit", probability = TRUE, main = "")
 
-hist(df_durchgang1[df_durchgang1$test_typ == "ug", ]$KL, xlab = "KL für ug", 
+hist(erster_durchgang_ug_kl, xlab = "KL für ug", 
      ylab = "Relative Häufigkeit", probability = TRUE, main = "")
 
 # Rechne Kolmogorov-Smirnov-Test auf Normalverteilung
@@ -56,23 +60,72 @@ ks.test(df_durchgang1$KL, y="pnorm", mean=mu, sd=sqrt(sigma2))
 qqnorm(df_durchgang1$KL, main = "Q-Q Plot für KL")
 qqline(df_durchgang1$KL, col = "red", lwd = 2)
 
-t.test(KL ~ gruppe, data = df_durchgang1)
-
-# Diese Funktion überprüft schon impizit, ob Varianzen gleich sind (Welch’s t-test)
-
-# Two Sample t-test
-# 
-# data:  KL by gruppe
-# t = 0.34122, df = 38, p-value = 0.7348
-# alternative hypothesis: true difference in means between group 1 and group 2 is not equal to 0
-# 95 percent confidence interval:
-#   -2.047119  2.877119
-# sample estimates:
-#   mean in group 1 mean in group 2 
-# 11.255          10.840 
+# Diese Funktion überprüft schon impizit, ob Varianzen gleich sind (Welch’s t-test):
+t.test(erster_durchgang_gu_kl, erster_durchgang_ug_kl)
+# oder alternativ: t.test(KL ~ gruppe, data = df_durchgang1)
 
 # p-value = 0.7348 => die Unterschiede sind nicht signifikant
 
 
+# Aufgabe 2
+# Zwei verbundene Stichproben
 
+df_ohne_gruppe <- df[, -c(1, 3)]
 
+# a)
+erster_durchgang_kl <- df_ohne_gruppe[df_ohne_gruppe$durchgang == "1", ]$KL
+zweiter_durchgang_kl <- df_ohne_gruppe[df_ohne_gruppe$durchgang == "2", ]$KL
+
+# Deskriptive Analyse
+boxplot(erster_durchgang_kl,
+        zweiter_durchgang_kl,
+        names = c("1. Durchgang", "2. Durchgang"),
+        ylab = "KL",
+        xlab = "", horizontal = FALSE, col = "lightblue")
+
+hist(erster_durchgang_kl, xlab = "KL für 1. Durchgang", 
+     ylab = "Relative Häufigkeit", probability = TRUE, main = "")
+
+hist(zweiter_durchgang_kl, xlab = "KL für 2. Durchgang", 
+     ylab = "Relative Häufigkeit", probability = TRUE, main = "")
+
+differences <- zweiter_durchgang_kl - erster_durchgang_kl
+
+qqnorm(differences)
+qqline(differences, col = "red", lwd = 2)
+# Differenzen sind nicht normalverteilt => wir können t-test nicht verwenden
+
+# -> Nichtparametrischer Wilcoxon-Vorzeichen-Rangtest:
+wilcox.test(zweiter_durchgang_kl, erster_durchgang_kl, paired = TRUE, 
+            alternative = "greater")
+# p-value = 2.153e-05 => Wir lehnen H0 ab, die Konzentrationsscore 
+# verbessert sich durch einen Wiederholungseffekt
+
+# b)
+erster_durchgang_zeit <- df_ohne_gruppe[df_ohne_gruppe$durchgang == "1", ]$B
+zweiter_durchgang_zeit <- df_ohne_gruppe[df_ohne_gruppe$durchgang == "2", ]$B
+
+# Deskriptive Analyse
+boxplot(erster_durchgang_zeit,
+        zweiter_durchgang_zeit,
+        names = c("1. Durchgang", "2. Durchgang"),
+        ylab = "Bearbeitungzeit",
+        xlab = "", horizontal = FALSE, col = "lightblue")
+
+hist(erster_durchgang_zeit, xlab = "Bearbeitungzeit für 1. Durchgang", 
+     ylab = "Relative Häufigkeit", probability = TRUE, main = "")
+
+hist(zweiter_durchgang_zeit, xlab = "Bearbeitungzeit für 2. Durchgang", 
+     ylab = "Relative Häufigkeit", probability = TRUE, main = "")
+
+differences <- zweiter_durchgang_zeit - erster_durchgang_zeit
+
+qqnorm(differences)
+qqline(differences, col = "red", lwd = 2)
+# Differenzen sind nicht normalverteilt => wir können t-test nicht verwenden
+
+# -> Nichtparametrischer Wilcoxon-Vorzeichen-Rangtest:
+wilcox.test(zweiter_durchgang_zeit, erster_durchgang_zeit, paired = TRUE, 
+            alternative = "less")
+# p-value = 3.877e-05 => wie lehnen H0 ab, die Bearbeitungszeit verbessert sich 
+# durch einen Wiederholungseffekt
