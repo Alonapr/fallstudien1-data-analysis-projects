@@ -91,10 +91,11 @@ ks.test(erster_durchgang_ug_kl, y="pnorm", mean=mu, sd=sqrt(sigma2))
 # stammen -> nichts spricht dagegen, dass die Daten normalverteilt sind
 
 # Zusätzlich können wir das QQ-Plot erstellen, um visuell die NV-Annahme zu überprüfen
-qqnorm(df_durchgang1$KL, main = "Q-Q Plot für KL")
-qqline(df_durchgang1$KL, col = "red", lwd = 2)
+qqnorm(erster_durchgang_gu_kl, main = "Q-Q Plot für KL, GU")
+qqline(erster_durchgang_gu_kl, col = "red", lwd = 2)
 
-# 
+qqnorm(erster_durchgang_ug_kl, main = "Q-Q Plot für KL, UG")
+qqline(erster_durchgang_ug_kl, col = "red", lwd = 2)
 
 # Diese Funktion überprüft schon impizit, ob Varianzen gleich sind (Welch’s t-test):
 t.test(erster_durchgang_gu_kl, erster_durchgang_ug_kl)
@@ -127,15 +128,18 @@ hist(zweiter_durchgang_kl, xlab = "KL für 2. Durchgang",
 
 differences <- zweiter_durchgang_kl - erster_durchgang_kl
 
+mu <- mean(differences)
+# 2.7125
+sigma2 <- var(differences)
+# 10.26369
+
+ks.test(differences, y="pnorm", mean=mu, sd=sqrt(sigma2))
+
 qqnorm(differences)
 qqline(differences, col = "red", lwd = 2)
-# Differenzen sind nicht normalverteilt => wir können t-test nicht verwenden
+# Differenzen sind normalverteilt => wir können t-test nicht verwenden
 
-# -> Nichtparametrischer Wilcoxon-Vorzeichen-Rangtest:
-wilcox.test(zweiter_durchgang_kl, erster_durchgang_kl, paired = TRUE, 
-            alternative = "greater")
-# p-value = 2.153e-05 => Wir lehnen H0 ab, die Konzentrationsscore 
-# verbessert sich durch einen Wiederholungseffekt
+t.test(erster_durchgang_kl, zweiter_durchgang_kl, paired = TRUE, alternative = "less")
 
 # b)
 erster_durchgang_zeit <- df_ohne_gruppe[df_ohne_gruppe$durchgang == "1", ]$B
