@@ -2,27 +2,52 @@ library(car)
 
 df <- read.table("Konzentrationsdaten.txt", header=TRUE)
 head(df)
+dim(df)
+
+#Überprüfung auf NA-Werte
+sum(is.na(df))
+#0
+
+#Betrachtung der Verteilung der Daten
+summary(df)
+attach(df)
+
+#Bearbeitungszeit
+hist(B, main = "")
+
+#
+par(mfrow = c(1,1))
+par(mar = c(4.2, 4, 1, 1))
+hist(AR, main = "")
+hist(AA, main = "")
+hist(AF, main = "")
 
 # Vorbereitung von Daten:
 
-# Entfernen der Zeile mit Extremwerten:
-df <- df[df$id != "14",]
-
 # Umwandlung der Variablen in Faktoren:
-df$gruppe <- as.factor(df$gruppe) 
-df$id <- as.factor(df$id)
-df$durchgang <- as.factor(df$durchgang)
-df$test_typ <- as.factor(df$test_typ)
+gruppe <- as.factor(gruppe) 
+id <- as.factor(id)
+durchgang <- as.factor(durchgang)
+test_typ <- as.factor(test_typ)
 
+detach(df)
 
 # Aufgabe 1
 # Zwei unverbundene Stichproben
 
-df_durchgang1 <- df[df$durchgang == "1", ]
+df_durchgang1 <- subset(df, durchgang == 1)
+
+par(mfrow = c(1,1))
+boxplot(df_durchgang1$KL ~ df_durchgang1$test_typ, col = "lightblue",
+        xlab = "Test Typ", ylab = "Konzentrationsscores")
+
+# Entfernen der Zeile mit Extremwerten:
+df <- df[df$id != "14",]  
+df_durchgang1 <- subset(df, durchgang == 1)
+
 erster_durchgang_gu_kl <- df_durchgang1[df_durchgang1$test_typ == "gu", ]$KL
 erster_durchgang_ug_kl <- df_durchgang1[df_durchgang1$test_typ == "ug", ]$KL
-  
-# Deskriptive Analyse
+
 boxplot(erster_durchgang_gu_kl,
         erster_durchgang_ug_kl,
         names = c("gu", "ug"),
