@@ -64,26 +64,37 @@ hist(erster_durchgang_ug_kl, xlab = "Konzentrationsscore für ug",
 # Berechne dazu arithmetisches Mittel als e-treuen Schätzer für mu und 
 # Stichprobenvarianz als e-treuen Schätzer der Varianz
 
-mu <- mean(df_durchgang1$KL)
-# 11.0475
-sigma2 <- var(df_durchgang1$KL)
-# 14.45692
+# GU Test:
+
+mu <- mean(erster_durchgang_gu_kl)
+# 11.255
+sigma2 <- var(erster_durchgang_gu_kl)
+# 16.22261
 
 # ks.test aus base R als Test auf Normalverteilung
-ks.test(df_durchgang1$KL, y="pnorm", mean=mu, sd=sqrt(sigma2))
+ks.test(erster_durchgang_gu_kl, y="pnorm", mean=mu, sd=sqrt(sigma2))
+# p-value = 0.6115
 
-# Asymptotic one-sample Kolmogorov-Smirnov test
-# 
-# data:  df_durchgang1$KL
-# D = 0.08848, p-value = 0.9129
-# alternative hypothesis: two-sided
 
-# Wir verwerfen die H0 nicht, dass sie aus einer N(mu, sqrt(sigma2))-Verteilung 
+# UG Test:
+
+mu <- mean(erster_durchgang_ug_kl)
+# 10.84
+sigma2 <- var(erster_durchgang_ug_kl)
+# 13.36147
+
+# ks.test aus base R als Test auf Normalverteilung
+ks.test(erster_durchgang_ug_kl, y="pnorm", mean=mu, sd=sqrt(sigma2))
+# p-value = 0.8863
+
+# Wir verwerfen die H0 bei beiden Testen nicht, dass sie aus einer N(mu, sqrt(sigma2))-Verteilung 
 # stammen -> nichts spricht dagegen, dass die Daten normalverteilt sind
 
 # Zusätzlich können wir das QQ-Plot erstellen, um visuell die NV-Annahme zu überprüfen
 qqnorm(df_durchgang1$KL, main = "Q-Q Plot für KL")
 qqline(df_durchgang1$KL, col = "red", lwd = 2)
+
+# 
 
 # Diese Funktion überprüft schon impizit, ob Varianzen gleich sind (Welch’s t-test):
 t.test(erster_durchgang_gu_kl, erster_durchgang_ug_kl)
