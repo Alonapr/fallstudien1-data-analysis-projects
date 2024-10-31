@@ -162,12 +162,17 @@ hist(zweiter_durchgang_zeit, xlab = "Bearbeitungzeit für 2. Durchgang",
 
 differences <- zweiter_durchgang_zeit - erster_durchgang_zeit
 
+mu <- mean(differences)
+# -16.8175
+sigma2 <- var(differences)
+# 635.8917
+
+ks.test(differences, y="pnorm", mean=mu, sd=sqrt(sigma2))
+# p-value = 0.4376 => wir lehnen H0 nicht ab
+
 qqnorm(differences)
 qqline(differences, col = "red", lwd = 2)
-# Differenzen sind nicht normalverteilt => wir können t-test nicht verwenden
 
-# -> Nichtparametrischer Wilcoxon-Vorzeichen-Rangtest:
-wilcox.test(zweiter_durchgang_zeit, erster_durchgang_zeit, paired = TRUE, 
-            alternative = "less")
-# p-value = 3.877e-05 => wie lehnen H0 ab, die Bearbeitungszeit verbessert sich 
-# durch einen Wiederholungseffekt
+t.test(zweiter_durchgang_zeit, erster_durchgang_zeit, paired = TRUE, alternative = "less")
+t.test(differences, alternative = "less")
+# p-value = 7.098e-05 => wie lehnen H0 ab, die Bearbeitungszeit hat sich verbessert 
