@@ -139,11 +139,13 @@ qqnorm(differences)
 qqline(differences, col = "red", lwd = 2)
 # Differenzen sind normalverteilt => wir können t-test nicht verwenden
 
-t.test(erster_durchgang_kl, zweiter_durchgang_kl, paired = TRUE, alternative = "less")
+t.test(zweiter_durchgang_kl, erster_durchgang_kl, paired = TRUE, alternative = "greater")
+t.test(differences, alternative = "greater")
 
 # b)
 erster_durchgang_zeit <- df_ohne_gruppe[df_ohne_gruppe$durchgang == "1", ]$B
 zweiter_durchgang_zeit <- df_ohne_gruppe[df_ohne_gruppe$durchgang == "2", ]$B
+# p-value = 2.033e-06 => wir lehnen H0 ab, KL verbessert sich durch einen Wiederholungseffekt
 
 # Deskriptive Analyse
 boxplot(erster_durchgang_zeit,
