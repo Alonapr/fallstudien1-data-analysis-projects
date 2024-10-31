@@ -137,10 +137,12 @@ ks.test(differences, y="pnorm", mean=mu, sd=sqrt(sigma2))
 
 qqnorm(differences)
 qqline(differences, col = "red", lwd = 2)
-# Differenzen sind normalverteilt => wir können t-test nicht verwenden
+# Differenzen sind normalverteilt => wir können t-test verwenden
 
-t.test(zweiter_durchgang_kl, erster_durchgang_kl, paired = TRUE, alternative = "greater")
+# t.test(zweiter_durchgang_kl, erster_durchgang_kl, paired = TRUE, alternative = "greater")
 t.test(differences, alternative = "greater")
+# p-value = 2.033e-06, lehnen H0 ab => entscheiden für H1 (2. Durchgang > 1. Durchgang)
+# => die Konzentrationsscore verbessert sich durch einen Wiederholungseffekt
 
 # b)
 erster_durchgang_zeit <- df_ohne_gruppe[df_ohne_gruppe$durchgang == "1", ]$B
