@@ -39,7 +39,7 @@ df_durchgang1 <- subset(df, durchgang == 1)
 
 par(mfrow = c(1,1))
 boxplot(df_durchgang1$KL ~ df_durchgang1$test_typ, col = "lightblue",
-        xlab = "Test Typ", ylab = "Konzentrationsscores")
+        xlab = "Test Typ", ylab = "Konzentrationsscore")
 
 # Entfernen der Zeile mit Extremwerten:
 df <- df[df$id != "14",]  
@@ -51,13 +51,13 @@ erster_durchgang_ug_kl <- df_durchgang1[df_durchgang1$test_typ == "ug", ]$KL
 boxplot(erster_durchgang_gu_kl,
         erster_durchgang_ug_kl,
         names = c("gu", "ug"),
-        ylab = "KL",
-        xlab = "Aufgabe für den ersten Durchgang", horizontal = FALSE, col = "lightblue")
+        ylab = "Konzentrationsscore",
+        xlab = "Test Typ", col = "lightblue")
 
-hist(erster_durchgang_gu_kl, xlab = "KL für gu", 
+hist(erster_durchgang_gu_kl, xlab = "Konzentrationsscore für gu", 
      ylab = "Relative Häufigkeit", probability = TRUE, main = "")
 
-hist(erster_durchgang_ug_kl, xlab = "KL für ug", 
+hist(erster_durchgang_ug_kl, xlab = "Konzentrationsscore für ug", 
      ylab = "Relative Häufigkeit", probability = TRUE, main = "")
 
 # Rechne Kolmogorov-Smirnov-Test auf Normalverteilung
