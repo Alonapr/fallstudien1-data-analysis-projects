@@ -178,3 +178,54 @@ qqline(differences, col = "red", lwd = 2)
 t.test(zweiter_durchgang_zeit, erster_durchgang_zeit, paired = TRUE, alternative = "less")
 t.test(differences, alternative = "less")
 # p-value = 7.098e-05 => wie lehnen H0 ab, die Bearbeitungszeit hat sich verbessert 
+
+
+# Aufgabe 3
+# Ist eine potentielle Verbesserung des Konzentrationsscores durch Wiederholung 
+# größer, wenn exakt der gleiche Test wiederholt wird (Gruppe 1) im Vergleich 
+# dazu, dass von UG auf GU gewechselt wird (Gruppe 2)?
+
+# Gruppe 1:
+gruppe1_durchgang1 <- df[df$gruppe == "1" & df$durchgang == "1", ]$KL
+gruppe1_durchgang2 <- df[df$gruppe == "1" & df$durchgang == "2", ]$KL
+
+differences1 <- gruppe1_durchgang2 - gruppe1_durchgang1
+
+mu <- mean(differences1)
+# 2.31
+sigma2 <- var(differences1)
+# 9.942
+
+ks.test(differences1, y="pnorm", mean=mu, sd=sqrt(sigma2))
+# p-value = 0.9548 => wir lehnen H0 nicht ab
+
+qqnorm(differences1)
+qqline(differences1, col = "red", lwd = 2)
+
+t.test(gruppe1_durchgang2, gruppe1_durchgang1, paired = TRUE, alternative = "greater")
+t.test(differences1, alternative = "greater")
+# p-value = 0.001986 => die Differenzen sind signifikant, KL verbessert sich
+
+# Gruppe 2:
+gruppe2_durchgang1 <- df[df$gruppe == "2" & df$durchgang == "1", ]$KL
+gruppe2_durchgang2 <- df[df$gruppe == "2" & df$durchgang == "2", ]$KL
+
+differences2 <- gruppe2_durchgang2 - gruppe2_durchgang1
+
+mu <- mean(differences2)
+# 3.115
+sigma2 <- var(differences2)
+# 10.7845
+
+ks.test(differences2, y="pnorm", mean=mu, sd=sqrt(sigma2))
+# p-value = 0.9467 => wir lehnen H0 nicht ab
+
+qqnorm(differences2)
+qqline(differences2, col = "red", lwd = 2)
+
+t.test(gruppe2_durchgang2, gruppe2_durchgang1, paired = TRUE, alternative = "greater")
+t.test(differences2, alternative = "greater")
+# p-value = 0.0002205 => die Differenzen sind signifikant, KL verbessert sich
+
+t.test(differences1, differences2, alternative = "greater")
+# p-value = 0.783
