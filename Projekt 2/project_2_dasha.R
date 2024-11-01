@@ -4,25 +4,23 @@ df <- read.table("Konzentrationsdaten.txt", header=TRUE)
 head(df)
 dim(df)
 
-#Überprüfung auf NA-Werte
-sum(is.na(df))
-#0
+# Überprüfung auf NA-Werte
+sum(is.na(df)) # 0
 
-#Betrachtung der Verteilung der Daten
+# Entfernen der Zeile mit Extremwerten:
+df <- df[df$id != "14",]
+
+# Betrachtung der Verteilung der Daten
 summary(df)
+
 attach(df)
 
-#Bearbeitungszeit
-hist(B, main = "")
-
-#
-par(mfrow = c(1,1))
-par(mar = c(4.2, 4, 1, 1))
-hist(AR, main = "")
-hist(AA, main = "")
-hist(AF, main = "")
-
-# Vorbereitung von Daten:
+par(mar = c(4.2, 4, 1, 1), mfrow = c(2, 2)) 
+hist(B, main = "") # Bearbeitungszeit
+hist(AR, main = "") # Anzahl richtiger Zeichen
+hist(AA, main = "") # Anzahl ausgelassener (richtiger) Zeichen
+hist(AF, main = "") # Anzahl falscher Zeichen
+par(mfrow = c(1, 1)) 
 
 # Umwandlung der Variablen in Faktoren:
 gruppe <- as.factor(gruppe) 
@@ -32,200 +30,220 @@ test_typ <- as.factor(test_typ)
 
 detach(df)
 
-# Aufgabe 1
+# AUFGABE 1
 # Zwei unverbundene Stichproben
 
 df_durchgang1 <- subset(df, durchgang == 1)
+durchgang1_gu_kl <- df_durchgang1[df_durchgang1$test_typ == "gu", ]$KL
+durchgang1_ug_kl <- df_durchgang1[df_durchgang1$test_typ == "ug", ]$KL
 
-par(mfrow = c(1,1))
+# Vergleich der Konzentrationsscores zwischen GU- und UG-Test im ersten Durchgang
 boxplot(df_durchgang1$KL ~ df_durchgang1$test_typ, col = "lightblue",
         xlab = "Test Typ", ylab = "Konzentrationsscore")
 
-# Entfernen der Zeile mit Extremwerten:
-df <- df[df$id != "14",]  
-df_durchgang1 <- subset(df, durchgang == 1)
-
-erster_durchgang_gu_kl <- df_durchgang1[df_durchgang1$test_typ == "gu", ]$KL
-erster_durchgang_ug_kl <- df_durchgang1[df_durchgang1$test_typ == "ug", ]$KL
-
-boxplot(erster_durchgang_gu_kl,
-        erster_durchgang_ug_kl,
-        names = c("gu", "ug"),
-        ylab = "Konzentrationsscore",
-        xlab = "Test Typ", col = "lightblue")
-
-hist(erster_durchgang_gu_kl, xlab = "Konzentrationsscore für gu", 
+# Verteilung des Konzentrationsscores für GU im ersten Durchgang
+hist(durchgang1_gu_kl, xlab = "Konzentrationsscore für GU", 
      ylab = "Relative Häufigkeit", probability = TRUE, main = "")
 
-hist(erster_durchgang_ug_kl, xlab = "Konzentrationsscore für ug", 
+# Verteilung des Konzentrationsscores für UG im ersten Durchgang
+hist(durchgang1_ug_kl, xlab = "Konzentrationsscore für UG", 
      ylab = "Relative Häufigkeit", probability = TRUE, main = "")
 
 # Rechne Kolmogorov-Smirnov-Test auf Normalverteilung
-# Berechne dazu arithmetisches Mittel als e-treuen Schätzer für mu und 
-# Stichprobenvarianz als e-treuen Schätzer der Varianz
-
 # GU Test:
-
-mu <- mean(erster_durchgang_gu_kl)
-# 11.255
-sigma2 <- var(erster_durchgang_gu_kl)
-# 16.22261
-
-# ks.test aus base R als Test auf Normalverteilung
-ks.test(erster_durchgang_gu_kl, y="pnorm", mean=mu, sd=sqrt(sigma2))
+mu <- mean(durchgang1_gu_kl) # 11.255
+sigma2 <- var(durchgang1_gu_kl) # 16.22261
+ks.test(durchgang1_gu_kl, y="pnorm", mean=mu, sd=sqrt(sigma2))
 # p-value = 0.6115
 
-
 # UG Test:
-
-mu <- mean(erster_durchgang_ug_kl)
-# 10.84
-sigma2 <- var(erster_durchgang_ug_kl)
-# 13.36147
-
-# ks.test aus base R als Test auf Normalverteilung
-ks.test(erster_durchgang_ug_kl, y="pnorm", mean=mu, sd=sqrt(sigma2))
+mu <- mean(durchgang1_ug_kl) # 10.84
+sigma2 <- var(durchgang1_ug_kl) # 13.36147
+ks.test(durchgang1_ug_kl, y="pnorm", mean=mu, sd=sqrt(sigma2))
 # p-value = 0.8863
 
-# Wir verwerfen die H0 bei beiden Testen nicht, dass sie aus einer N(mu, sqrt(sigma2))-Verteilung 
-# stammen -> nichts spricht dagegen, dass die Daten normalverteilt sind
+# Wir verwerfen die H0 bei beiden Testen nicht, dass die Daten aus einer 
+# N(mu, sqrt(sigma2))-Verteilung stammen -> nichts spricht dagegen, 
+# dass die Daten normalverteilt sind
 
-# Zusätzlich können wir das QQ-Plot erstellen, um visuell die NV-Annahme zu überprüfen
-qqnorm(erster_durchgang_gu_kl, main = "Q-Q Plot für KL, GU")
-qqline(erster_durchgang_gu_kl, col = "red", lwd = 2)
+# Zusätzlich erstellen wir das QQ-Plot, um visuell die NV-Annahme zu überprüfen:
+# QQ-Plot zur Überprüfung der Normalverteilung des Konzentrationsscores (KL) (GU-Test)
+qqnorm(durchgang1_gu_kl, main = "")
+qqline(durchgang1_gu_kl, col = "red", lwd = 2)
 
-qqnorm(erster_durchgang_ug_kl, main = "Q-Q Plot für KL, UG")
-qqline(erster_durchgang_ug_kl, col = "red", lwd = 2)
+# QQ-Plot zur Überprüfung der Normalverteilung des Konzentrationsscores (KL) (UG-Test)
+qqnorm(durchgang1_ug_kl, main = "")
+qqline(durchgang1_ug_kl, col = "red", lwd = 2)
+# Die Q-Q Plots zeigen, dass die Daten für beide Testgruppen (GU und UG) 
+# annähernd normalverteilt sind. Die Anzahl an Beobachtungen ist aber niedrig. 
 
-# Diese Funktion überprüft schon impizit, ob Varianzen gleich sind (Welch’s t-test):
-t.test(erster_durchgang_gu_kl, erster_durchgang_ug_kl)
+# Zusätzlich: Shapiro-Wilk-Normalitätstest verwirft die H0 auch nicht:
+shapiro.test(durchgang1_gu_kl) # p-value = 0.5617
+shapiro.test(durchgang1_ug_kl) # p-value = 0.3286
+
+# Verwenden wir den t-Test zur Überprüfung der Unterschiede 
+# in Konzentrationsscores zwischen GU und UG Test:
+t.test(durchgang1_gu_kl, durchgang1_ug_kl)
 # oder alternativ: t.test(KL ~ gruppe, data = df_durchgang1)
+# p-value = 0.7348 => die Unterschiede sind nicht signifikant!
 
-# p-value = 0.7348 => die Unterschiede sind nicht signifikant
 
-
-# Aufgabe 2
+# AUFGABE 2
 # Zwei verbundene Stichproben
 
-df_ohne_gruppe <- df[, -c(1, 3)]
+# a) Verbesserung des Konzentrationsscores durch Wiederholungseffekt
+durchgang1_kl <- df[df$durchgang == "1", ]$KL
+durchgang2_kl <- df[df$durchgang == "2", ]$KL
 
-# a)
-erster_durchgang_kl <- df_ohne_gruppe[df_ohne_gruppe$durchgang == "1", ]$KL
-zweiter_durchgang_kl <- df_ohne_gruppe[df_ohne_gruppe$durchgang == "2", ]$KL
-
-# Deskriptive Analyse
-boxplot(erster_durchgang_kl,
-        zweiter_durchgang_kl,
+# Verbesserung des Konzentrationsscores durch Wiederholungseffekt
+boxplot(durchgang1_kl,
+        durchgang2_kl,
         names = c("1. Durchgang", "2. Durchgang"),
         ylab = "KL",
         xlab = "", horizontal = FALSE, col = "lightblue")
 
-hist(erster_durchgang_kl, xlab = "KL für 1. Durchgang", 
+par(mfrow = c(1, 2)) 
+# Verteilung des Konzentrationsscores im 1. Durchgang
+hist(durchgang1_kl, xlab = "KL für 1. Durchgang", 
      ylab = "Relative Häufigkeit", probability = TRUE, main = "")
+lines(density(durchgang1_kl), col = "blue", lwd = 2)
+abline(v = median(durchgang1_kl), col = "red", lwd = 2, lty = 2)
+legend("topright", legend = c("Dichte", "Median"), 
+       col = c("blue", "red"), lwd = 2, lty = c(1, 2), bty = "n")
 
-hist(zweiter_durchgang_kl, xlab = "KL für 2. Durchgang", 
-     ylab = "Relative Häufigkeit", probability = TRUE, main = "")
+# Verteilung des Konzentrationsscores im 2. Durchgang
+hist(durchgang2_kl, xlab = "KL für 2. Durchgang", 
+     ylab = "Relative Häufigkeit", probability = TRUE, main = "", breaks = 9)
+lines(density(durchgang2_kl), col = "blue", lwd = 2)
+abline(v = median(durchgang2_kl), col = "red", lwd = 2, lty = 2)
+legend("topright", legend = c("Dichte", "Median"), 
+       col = c("blue", "red"), lwd = 2, lty = c(1, 2), bty = "n")
+par(mfrow = c(1, 1)) 
 
-differences <- zweiter_durchgang_kl - erster_durchgang_kl
+differences <- durchgang2_kl - durchgang1_kl
 
-mu <- mean(differences)
-# 2.7125
-sigma2 <- var(differences)
-# 10.26369
+mu <- mean(differences) # 2.7125
+sigma2 <- var(differences) # 10.26369
 
-ks.test(differences, y="pnorm", mean=mu, sd=sqrt(sigma2))
+ks.test(differences, y="pnorm", mean=mu, sd=sqrt(sigma2)) 
+# p-value = 0.676 => wir können die H0 beibehalten
 
-qqnorm(differences)
+# Zusätlich:
+shapiro.test(differences) # p-value = 0.1214 => H0 wird beibehalten
+
+# QQ-Plot der Differenzen im Konzentrationsscore
+qqnorm(differences, main="")
 qqline(differences, col = "red", lwd = 2)
 # Differenzen sind normalverteilt => wir können t-test verwenden
 
 # t.test(zweiter_durchgang_kl, erster_durchgang_kl, paired = TRUE, alternative = "greater")
 t.test(differences, alternative = "greater")
-# p-value = 2.033e-06, lehnen H0 ab => entscheiden für H1 (2. Durchgang > 1. Durchgang)
+# p-value = 2.033e-06, wir lehnen H0 ab => entscheiden für H1 (2. Durchgang > 1. Durchgang)
 # => die Konzentrationsscore verbessert sich durch einen Wiederholungseffekt
 
-# b)
-erster_durchgang_zeit <- df_ohne_gruppe[df_ohne_gruppe$durchgang == "1", ]$B
-zweiter_durchgang_zeit <- df_ohne_gruppe[df_ohne_gruppe$durchgang == "2", ]$B
-# p-value = 2.033e-06 => wir lehnen H0 ab, KL verbessert sich durch einen Wiederholungseffekt
+# b) Verbesserung der Bearbeitungszeit durch Wiederholungseffekt
+durchgang1_zeit <- df[df$durchgang == "1", ]$B
+durchgang2_zeit <- df[df$durchgang == "2", ]$B
 
-# Deskriptive Analyse
-boxplot(erster_durchgang_zeit,
-        zweiter_durchgang_zeit,
+# Verbesserung des Bearbeitungszeit durch Wiederholungseffekt
+boxplot(durchgang1_zeit,
+        durchgang2_zeit,
         names = c("1. Durchgang", "2. Durchgang"),
         ylab = "Bearbeitungzeit",
         xlab = "", horizontal = FALSE, col = "lightblue")
 
-hist(erster_durchgang_zeit, xlab = "Bearbeitungzeit für 1. Durchgang", 
-     ylab = "Relative Häufigkeit", probability = TRUE, main = "")
+par(mfrow = c(1, 2)) 
+# Verteilung des Bearbeitungszeit im 1. Durchgang
+hist(durchgang1_zeit, xlab = "Bearbeitungszeit für 1. Durchgang", 
+     ylab = "Relative Häufigkeit", probability = TRUE, 
+     main = "")
+lines(density(durchgang1_zeit), col = "blue", lwd = 2)
+abline(v = median(durchgang1_zeit), col = "red", lwd = 2, lty = 2)
+legend("topright", legend = c("Dichte", "Median"), 
+       col = c("blue", "red"), lwd = 2, lty = c(1, 2), bty = "n")
 
-hist(zweiter_durchgang_zeit, xlab = "Bearbeitungzeit für 2. Durchgang", 
-     ylab = "Relative Häufigkeit", probability = TRUE, main = "")
+# Verteilung des Bearbeitungszeit im 2. Durchgang
+hist(durchgang2_zeit, xlab = "Bearbeitungszeit für 2. Durchgang", 
+     ylab = "Relative Häufigkeit", probability = TRUE, 
+     main = "")
+lines(density(durchgang2_zeit), col = "blue", lwd = 2)
+abline(v = median(durchgang2_zeit), col = "red", lwd = 2, lty = 2)
+legend("topright", legend = c("Dichte", "Median"), 
+       col = c("blue", "red"), lwd = 2, lty = c(1, 2), bty = "n")
+par(mfrow = c(1, 1)) 
 
-differences <- zweiter_durchgang_zeit - erster_durchgang_zeit
+differences <- durchgang2_zeit - durchgang1_zeit
 
-mu <- mean(differences)
-# -16.8175
-sigma2 <- var(differences)
-# 635.8917
+mu <- mean(differences) # -16.8175
+sigma2 <- var(differences) # 635.8917
 
 ks.test(differences, y="pnorm", mean=mu, sd=sqrt(sigma2))
 # p-value = 0.4376 => wir lehnen H0 nicht ab
 
-qqnorm(differences)
+# Zusätlich:
+shapiro.test(differences) # p-value = 0.1187=> H0 wird beibehalten
+
+# QQ-Plot der Differenzen im Bearbeitungszeit
+qqnorm(differences, main="")
 qqline(differences, col = "red", lwd = 2)
+# Differenzen sind normalverteilt => wir können t-test verwenden
 
-t.test(zweiter_durchgang_zeit, erster_durchgang_zeit, paired = TRUE, alternative = "less")
+# t.test(durchgang2_zeit, durchgang1_zeit, paired = TRUE, alternative = "less")
 t.test(differences, alternative = "less")
-# p-value = 7.098e-05 => wie lehnen H0 ab, die Bearbeitungszeit hat sich verbessert 
+# p-value = 7.098e-05 => wie lehnen H0 ab => die Bearbeitungszeit hat sich verbessert 
 
 
-# Aufgabe 3
+# AUFGABE 3
 # Ist eine potentielle Verbesserung des Konzentrationsscores durch Wiederholung 
 # größer, wenn exakt der gleiche Test wiederholt wird (Gruppe 1) im Vergleich 
 # dazu, dass von UG auf GU gewechselt wird (Gruppe 2)?
 
 # Gruppe 1:
-gruppe1_durchgang1 <- df[df$gruppe == "1" & df$durchgang == "1", ]$KL
-gruppe1_durchgang2 <- df[df$gruppe == "1" & df$durchgang == "2", ]$KL
+gruppe1_durchgang1_kl <- df[df$gruppe == "1" & df$durchgang == "1", ]$KL
+gruppe1_durchgang2_kl <- df[df$gruppe == "1" & df$durchgang == "2", ]$KL
 
-differences1 <- gruppe1_durchgang2 - gruppe1_durchgang1
+differences1 <- gruppe1_durchgang2_kl - gruppe1_durchgang1_kl
 
-mu <- mean(differences1)
-# 2.31
-sigma2 <- var(differences1)
-# 9.942
+mu <- mean(differences1) # 2.31
+sigma2 <- var(differences1) # 9.942
 
 ks.test(differences1, y="pnorm", mean=mu, sd=sqrt(sigma2))
 # p-value = 0.9548 => wir lehnen H0 nicht ab
 
-qqnorm(differences1)
-qqline(differences1, col = "red", lwd = 2)
+# Zusätlich:
+shapiro.test(differences1) # p-value = 0.2586 => H0 wird beibehalten
 
-t.test(gruppe1_durchgang2, gruppe1_durchgang1, paired = TRUE, alternative = "greater")
+# QQ-Plot der Differenzen in Konzentrationsscores für die 1. Gruppe
+qqnorm(differences1, main="")
+qqline(differences1, col = "red", lwd = 2)
+# Differenzen sind normalverteilt => wir können t-test verwenden
+
+t.test(gruppe1_durchgang2_kl, gruppe1_durchgang1_kl, paired = TRUE, alternative = "greater")
 t.test(differences1, alternative = "greater")
 # p-value = 0.001986 => die Differenzen sind signifikant, KL verbessert sich
 
 # Gruppe 2:
-gruppe2_durchgang1 <- df[df$gruppe == "2" & df$durchgang == "1", ]$KL
-gruppe2_durchgang2 <- df[df$gruppe == "2" & df$durchgang == "2", ]$KL
+gruppe2_durchgang1_kl <- df[df$gruppe == "2" & df$durchgang == "1", ]$KL
+gruppe2_durchgang2_kl <- df[df$gruppe == "2" & df$durchgang == "2", ]$KL
 
-differences2 <- gruppe2_durchgang2 - gruppe2_durchgang1
+differences2 <- gruppe2_durchgang2_kl - gruppe2_durchgang1_kl
 
-mu <- mean(differences2)
-# 3.115
-sigma2 <- var(differences2)
-# 10.7845
+mu <- mean(differences2) # 3.115
+sigma2 <- var(differences2) # 10.7845
 
 ks.test(differences2, y="pnorm", mean=mu, sd=sqrt(sigma2))
 # p-value = 0.9467 => wir lehnen H0 nicht ab
 
-qqnorm(differences2)
+# QQ-Plot der Differenzen in Konzentrationsscores für die 2. Gruppe
+qqnorm(differences2, main="")
 qqline(differences2, col = "red", lwd = 2)
+# Differenzen sind normalverteilt => wir können t-test verwenden
 
-t.test(gruppe2_durchgang2, gruppe2_durchgang1, paired = TRUE, alternative = "greater")
+t.test(gruppe2_durchgang2_kl, gruppe2_durchgang1_kl, paired = TRUE, alternative = "greater")
 t.test(differences2, alternative = "greater")
 # p-value = 0.0002205 => die Differenzen sind signifikant, KL verbessert sich
 
 t.test(differences1, differences2, alternative = "greater")
 # p-value = 0.783
+# Ja, die Verbesserung des Konzentrationsscores ist größer, wenn derselbe Test 
+# wiederholt wird (Gruppe 1) im Vergleich zum Wechsel von UG zu GU (Gruppe 2)
