@@ -234,6 +234,9 @@ sigma2 <- var(differences2) # 10.7845
 ks.test(differences2, y="pnorm", mean=mu, sd=sqrt(sigma2))
 # p-value = 0.9467 => wir lehnen H0 nicht ab
 
+# Zusätlich:
+shapiro.test(differences2) # p-value = 0.6598 => H0 wird beibehalten
+
 # QQ-Plot der Differenzen in Konzentrationsscores für die 2. Gruppe
 qqnorm(differences2, main="")
 qqline(differences2, col = "red", lwd = 2)
