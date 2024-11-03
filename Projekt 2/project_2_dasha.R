@@ -37,16 +37,16 @@ df_durchgang1 <- subset(df, durchgang == 1)
 durchgang1_gu_kl <- df_durchgang1[df_durchgang1$test_typ == "gu", ]$KL
 durchgang1_ug_kl <- df_durchgang1[df_durchgang1$test_typ == "ug", ]$KL
 
-# Vergleich der Konzentrationsscores zwischen GU- und UG-Test im ersten Durchgang
+# Vergleich der Konzentrationsleistung zwischen GU- und UG-Test im ersten Durchgang
 boxplot(df_durchgang1$KL ~ df_durchgang1$test_typ, col = "lightblue",
-        xlab = "Test Typ", ylab = "Konzentrationsscore")
+        xlab = "Test Typ", ylab = "Konzentrationsleistung")
 
-# Verteilung des Konzentrationsscores für GU im ersten Durchgang
+# Verteilung der Konzentrationsleistung für GU im ersten Durchgang
 hist(durchgang1_gu_kl, xlab = "Konzentrationsscore für GU", 
      ylab = "Relative Häufigkeit", probability = TRUE, main = "")
 
-# Verteilung des Konzentrationsscores für UG im ersten Durchgang
-hist(durchgang1_ug_kl, xlab = "Konzentrationsscore für UG", 
+# Verteilung der Konzentrationsleistung für UG im ersten Durchgang
+hist(durchgang1_ug_kl, xlab = "Konzentrationsleistung für UG", 
      ylab = "Relative Häufigkeit", probability = TRUE, main = "")
 
 # Rechne Kolmogorov-Smirnov-Test auf Normalverteilung
@@ -67,11 +67,11 @@ ks.test(durchgang1_ug_kl, y="pnorm", mean=mu, sd=sqrt(sigma2))
 # dass die Daten normalverteilt sind
 
 # Zusätzlich erstellen wir das QQ-Plot, um visuell die NV-Annahme zu überprüfen:
-# QQ-Plot zur Überprüfung der Normalverteilung des Konzentrationsscores (KL) (GU-Test)
+# QQ-Plot zur Überprüfung der Normalverteilung der Konzentrationsleistung (KL) (GU-Test)
 qqnorm(durchgang1_gu_kl, main = "")
 qqline(durchgang1_gu_kl, col = "red", lwd = 2)
 
-# QQ-Plot zur Überprüfung der Normalverteilung des Konzentrationsscores (KL) (UG-Test)
+# QQ-Plot zur Überprüfung der Normalverteilung der Konzentrationsleistung (KL) (UG-Test)
 qqnorm(durchgang1_ug_kl, main = "")
 qqline(durchgang1_ug_kl, col = "red", lwd = 2)
 # Die Q-Q Plots zeigen, dass die Daten für beide Testgruppen (GU und UG) 
