@@ -42,7 +42,7 @@ boxplot(df_durchgang1$KL ~ df_durchgang1$test_typ, col = "lightblue",
         xlab = "Test Typ", ylab = "Konzentrationsleistung")
 
 # Verteilung der Konzentrationsleistung für GU im ersten Durchgang
-hist(durchgang1_gu_kl, xlab = "Konzentrationsscore für GU", 
+hist(durchgang1_gu_kl, xlab = "Konzentrationsleistung für GU", 
      ylab = "Relative Häufigkeit", probability = TRUE, main = "")
 
 # Verteilung der Konzentrationsleistung für UG im ersten Durchgang
