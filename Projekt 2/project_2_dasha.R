@@ -7,19 +7,24 @@ dim(df)
 # Überprüfung auf NA-Werte
 sum(is.na(df)) # 0
 
+boxplot(df$KL ~ df$gruppe, col = "lightblue",
+        xlab = "Test Typ", ylab = "Konzentrationsscore")
+
 # Entfernen der Zeile mit Extremwerten:
 df <- df[df$id != "14",]
 
 # Betrachtung der Verteilung der Daten
 summary(df)
+par(mar = c(4.2, 4, 1, 1))
 
 attach(df)
-
-par(mar = c(4.2, 4, 1, 1), mfrow = c(2, 2)) 
+# Histogramme von der Bearbeitungszeit, Anzahl richtiger Zeichen, 
+# Anzahl ausgelassener (richtiger) Zeichen, Anzahl falscher Zeichen
+par(mar = c(4.2, 4, 1, 1), mfrow = c(1, 3)) 
 hist(B, main = "") # Bearbeitungszeit
 hist(AR, main = "") # Anzahl richtiger Zeichen
 hist(AA, main = "") # Anzahl ausgelassener (richtiger) Zeichen
-hist(AF, main = "") # Anzahl falscher Zeichen
+#hist(AF, main = "") # Anzahl falscher Zeichen
 par(mfrow = c(1, 1)) 
 
 # Umwandlung der Variablen in Faktoren:
@@ -29,6 +34,10 @@ durchgang <- as.factor(durchgang)
 test_typ <- as.factor(test_typ)
 
 detach(df)
+
+table(df$AF)
+#  0  1  2 
+# 63 16  1
 
 # AUFGABE 1
 # Zwei unverbundene Stichproben
@@ -81,6 +90,9 @@ qqline(durchgang1_ug_kl, col = "red", lwd = 2)
 shapiro.test(durchgang1_gu_kl) # p-value = 0.5617
 shapiro.test(durchgang1_ug_kl) # p-value = 0.3286
 
+var.test(durchgang1_gu_kl, durchgang1_ug_kl) 
+# p-value = 0.6767 => die Varianzen sind nicht signifikant unterschiedlich
+
 # Verwenden wir den t-Test zur Überprüfung der Unterschiede 
 # in Konzentrationsscores zwischen GU und UG Test:
 t.test(durchgang1_gu_kl, durchgang1_ug_kl)
@@ -103,6 +115,7 @@ boxplot(durchgang1_kl,
         xlab = "", horizontal = FALSE, col = "lightblue")
 
 par(mfrow = c(1, 2)) 
+
 # Verteilung des Konzentrationsscores im 1. Durchgang
 hist(durchgang1_kl, xlab = "KL für 1. Durchgang", 
      ylab = "Relative Häufigkeit", probability = TRUE, main = "")
@@ -245,6 +258,9 @@ qqline(differences2, col = "red", lwd = 2)
 t.test(gruppe2_durchgang2_kl, gruppe2_durchgang1_kl, paired = TRUE, alternative = "greater")
 t.test(differences2, alternative = "greater")
 # p-value = 0.0002205 => die Differenzen sind signifikant, KL verbessert sich
+
+var.test(differences1, differences2) 
+# p-value = 0.8611 => die Varianzen sind nicht signifikant unterschiedlich
 
 t.test(differences1, differences2, alternative = "greater")
 # p-value = 0.783
