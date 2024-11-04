@@ -7,15 +7,12 @@ dim(df)
 # Überprüfung auf NA-Werte
 sum(is.na(df)) # 0
 
-<<<<<<< HEAD
 boxplot(df$KL ~ df$gruppe, col = "lightblue",
         xlab = "Test Typ", ylab = "Konzentrationsscore")
 
 # Entfernen der Zeile mit Extremwerten:
 df <- df[df$id != "14",]
 
-=======
->>>>>>> d9d5e94b04926c0ad5560505f429a163f53aaf55
 # Betrachtung der Verteilung der Daten
 summary(df)
 par(mar = c(4.2, 4, 1, 1))
@@ -23,13 +20,13 @@ par(mar = c(4.2, 4, 1, 1))
 boxplot(df$KL ~ df$gruppe, col = "lightblue", xlab = "Gruppe", 
         ylab = "Konzentrationsleistung")
 
-table(AF)
+table(df$AF)
 
 # Entfernen der Zeile mit Extremwerten:
 df <- df[df$id != "14",]
 
 attach(df)
-<<<<<<< HEAD
+
 # Histogramme von der Bearbeitungszeit, Anzahl richtiger Zeichen, 
 # Anzahl ausgelassener (richtiger) Zeichen, Anzahl falscher Zeichen
 par(mar = c(4.2, 4, 1, 1), mfrow = c(1, 3)) 
@@ -37,14 +34,14 @@ hist(B, main = "") # Bearbeitungszeit
 hist(AR, main = "") # Anzahl richtiger Zeichen
 hist(AA, main = "") # Anzahl ausgelassener (richtiger) Zeichen
 #hist(AF, main = "") # Anzahl falscher Zeichen
-=======
+
 
 par(mar = c(4.2, 4, 1, 1), mfrow = c(2, 2)) 
 hist(B, main = "", ylab = "Relative Häufigkeit", probability = TRUE) # Bearbeitungszeit
 hist(AR, main = "", ylab = "Relative Häufigkeit", probability = TRUE) # Anzahl richtiger Zeichen
 hist(AA, main = "", ylab = "Relative Häufigkeit", probability = TRUE) # Anzahl ausgelassener (richtiger) Zeichen
 hist(KL, main = "", ylab = "Relative Häufigkeit", probability = TRUE) # Konzentrationsleistung
->>>>>>> d9d5e94b04926c0ad5560505f429a163f53aaf55
+
 par(mfrow = c(1, 1)) 
 table(AF)
 
@@ -76,11 +73,11 @@ boxplot(df_durchgang1$KL ~ df_durchgang1$test_typ, col = "lightblue",
         xlab = "Test Typ", ylab = "Konzentrationsleistung")
 
 # Verteilung der Konzentrationsleistung für GU im ersten Durchgang
-hist(durchgang1_gu_kl, xlab = "Konzentrationsleistung für GU", 
+hist(durchgang1_gu_kl, xlab = "Konzentrationsleistung für GU",
      ylab = "Relative Häufigkeit", probability = TRUE, main = "")
 
 # Verteilung der Konzentrationsleistung für UG im ersten Durchgang
-hist(durchgang1_ug_kl, xlab = "Konzentrationsleistung für UG", 
+hist(durchgang1_ug_kl, xlab = "Konzentrationsleistung für UG",
      ylab = "Relative Häufigkeit", probability = TRUE, main = "")
 
 # Rechne Kolmogorov-Smirnov-Test auf Normalverteilung
