@@ -7,20 +7,30 @@ dim(df)
 # Überprüfung auf NA-Werte
 sum(is.na(df)) # 0
 
-# Entfernen der Zeile mit Extremwerten:
-df <- df[df$id != "14",]
-
 # Betrachtung der Verteilung der Daten
 summary(df)
+
+boxplot(df$KL ~ df$gruppe, col = "lightblue", xlab = "Gruppe", 
+        ylab = "Konzentrationsleistung")
+
+table(AF)
+
+# Entfernen der Zeile mit Extremwerten:
+df <- df[df$id != "14",]
 
 attach(df)
 
 par(mar = c(4.2, 4, 1, 1), mfrow = c(2, 2)) 
-hist(B, main = "") # Bearbeitungszeit
-hist(AR, main = "") # Anzahl richtiger Zeichen
-hist(AA, main = "") # Anzahl ausgelassener (richtiger) Zeichen
-hist(AF, main = "") # Anzahl falscher Zeichen
+hist(B, main = "", ylab = "Relative Häufigkeit", probability = TRUE) # Bearbeitungszeit
+hist(AR, main = "", ylab = "Relative Häufigkeit", probability = TRUE) # Anzahl richtiger Zeichen
+hist(AA, main = "", ylab = "Relative Häufigkeit", probability = TRUE) # Anzahl ausgelassener (richtiger) Zeichen
+hist(KL, main = "", ylab = "Relative Häufigkeit", probability = TRUE) # Konzentrationsleistung
 par(mfrow = c(1, 1)) 
+table(AF)
+
+
+# Entfernen der Zeile mit Extremwerten:
+df <- df[df$id != "14",]
 
 # Umwandlung der Variablen in Faktoren:
 gruppe <- as.factor(gruppe) 
