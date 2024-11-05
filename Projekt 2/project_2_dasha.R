@@ -108,7 +108,7 @@ durchgang2_kl <- df[df$durchgang == "2", ]$KL
 boxplot(durchgang1_kl,
         durchgang2_kl,
         names = c("1. Durchgang", "2. Durchgang"),
-        ylab = "KL",
+        ylab = "Konzentrationsleistung",
         xlab = "", horizontal = FALSE, col = "lightblue")
 
 par(mfrow = c(1, 2)) 
