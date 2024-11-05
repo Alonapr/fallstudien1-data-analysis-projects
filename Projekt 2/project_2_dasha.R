@@ -7,47 +7,26 @@ dim(df)
 # Überprüfung auf NA-Werte
 sum(is.na(df)) # 0
 
+# Betrachtung der Verteilung der KL nach Gruppe
 boxplot(df$KL ~ df$gruppe, col = "lightblue",
-        xlab = "Test Typ", ylab = "Konzentrationsscore")
-
-# Entfernen der Zeile mit Extremwerten:
-df <- df[df$id != "14",]
-
-# Betrachtung der Verteilung der Daten
-summary(df)
-par(mar = c(4.2, 4, 1, 1))
-
-boxplot(df$KL ~ df$gruppe, col = "lightblue", xlab = "Gruppe", 
-        ylab = "Konzentrationsleistung")
-
+        xlab = "Gruppe", ylab = "Konzentrationsleistung")
+# Häufigkeitsverteilung der AF
 table(df$AF)
 
 # Entfernen der Zeile mit Extremwerten:
 df <- df[df$id != "14",]
 
 attach(df)
-
+# Betrachtung der Verteilung der Daten nach Entfernung der Extremwerten
 # Histogramme von der Bearbeitungszeit, Anzahl richtiger Zeichen, 
-# Anzahl ausgelassener (richtiger) Zeichen, Anzahl falscher Zeichen
-par(mar = c(4.2, 4, 1, 1), mfrow = c(1, 3)) 
-hist(B, main = "") # Bearbeitungszeit
-hist(AR, main = "") # Anzahl richtiger Zeichen
-hist(AA, main = "") # Anzahl ausgelassener (richtiger) Zeichen
-#hist(AF, main = "") # Anzahl falscher Zeichen
-
-
+# Anzahl ausgelassener (richtiger) Zeichen, Konzentrationsleistung
 par(mar = c(4.2, 4, 1, 1), mfrow = c(2, 2)) 
-hist(B, main = "", ylab = "Relative Häufigkeit", probability = TRUE) # Bearbeitungszeit
-hist(AR, main = "", ylab = "Relative Häufigkeit", probability = TRUE) # Anzahl richtiger Zeichen
-hist(AA, main = "", ylab = "Relative Häufigkeit", probability = TRUE) # Anzahl ausgelassener (richtiger) Zeichen
-hist(KL, main = "", ylab = "Relative Häufigkeit", probability = TRUE) # Konzentrationsleistung
+hist(B, main = "", ylab = "Relative Häufigkeit", probability = TRUE) 
+hist(AR, main = "", ylab = "Relative Häufigkeit", probability = TRUE) 
+hist(AA, main = "", ylab = "Relative Häufigkeit", probability = TRUE) 
+hist(KL, main = "", ylab = "Relative Häufigkeit", probability = TRUE)
 
 par(mfrow = c(1, 1)) 
-table(AF)
-
-
-# Entfernen der Zeile mit Extremwerten:
-df <- df[df$id != "14",]
 
 # Umwandlung der Variablen in Faktoren:
 gruppe <- as.factor(gruppe) 
@@ -56,10 +35,6 @@ durchgang <- as.factor(durchgang)
 test_typ <- as.factor(test_typ)
 
 detach(df)
-
-table(df$AF)
-#  0  1  2 
-# 63 16  1
 
 # AUFGABE 1
 # Zwei unverbundene Stichproben
