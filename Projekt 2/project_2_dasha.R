@@ -87,12 +87,12 @@ qqline(durchgang1_ug_kl, col = "red", lwd = 2)
 shapiro.test(durchgang1_gu_kl) # p-value = 0.5617
 shapiro.test(durchgang1_ug_kl) # p-value = 0.3286
 
-var.test(durchgang1_gu_kl, durchgang1_ug_kl) 
+var.test(durchgang1_gu_kl, durchgang1_ug_kl)
 # p-value = 0.6767 => die Varianzen sind nicht signifikant unterschiedlich
 
 # Verwenden wir den t-Test zur Überprüfung der Unterschiede 
 # in Konzentrationsscores zwischen GU und UG Test:
-t.test(durchgang1_gu_kl, durchgang1_ug_kl)
+t.test(durchgang1_gu_kl, durchgang1_ug_kl, var.equal = TRUE)
 # oder alternativ: t.test(KL ~ gruppe, data = df_durchgang1)
 # p-value = 0.7348 => die Unterschiede sind nicht signifikant!
 
