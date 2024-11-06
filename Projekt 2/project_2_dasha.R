@@ -259,7 +259,7 @@ t.test(differences2, alternative = "greater")
 var.test(differences1, differences2) 
 # p-value = 0.8611 => die Varianzen sind nicht signifikant unterschiedlich
 
-t.test(differences1, differences2, alternative = "greater")
+t.test(differences1, differences2, alternative = "greater", var.equal = TRUE)
 # p-value = 0.783
 # Ja, die Verbesserung des Konzentrationsscores ist größer, wenn derselbe Test 
 # wiederholt wird (Gruppe 1) im Vergleich zum Wechsel von UG zu GU (Gruppe 2)
