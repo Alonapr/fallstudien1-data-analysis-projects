@@ -74,11 +74,11 @@ ks.test(durchgang1_ug_kl, y="pnorm", mean=mu, sd=sqrt(sigma2))
 
 # Zusätzlich erstellen wir das QQ-Plot, um visuell die NV-Annahme zu überprüfen:
 # QQ-Plot zur Überprüfung der Normalverteilung der Konzentrationsleistung (KL) (GU-Test)
-qqnorm(durchgang1_gu_kl, main = "")
+qqnorm(durchgang1_gu_kl, main = "",  xlab = "Theoretisches Quantil", ylab = "Empirisches Quantil")
 qqline(durchgang1_gu_kl, col = "red", lwd = 2)
 
 # QQ-Plot zur Überprüfung der Normalverteilung der Konzentrationsleistung (KL) (UG-Test)
-qqnorm(durchgang1_ug_kl, main = "")
+qqnorm(durchgang1_ug_kl, main = "", xlab = "Theoretisches Quantil", ylab = "Empirisches Quantil")
 qqline(durchgang1_ug_kl, col = "red", lwd = 2)
 # Die Q-Q Plots zeigen, dass die Daten für beide Testgruppen (GU und UG) 
 # annähernd normalverteilt sind. Die Anzahl an Beobachtungen ist aber niedrig. 
@@ -142,7 +142,7 @@ ks.test(differences, y="pnorm", mean=mu, sd=sqrt(sigma2))
 shapiro.test(differences) # p-value = 0.1214 => H0 wird beibehalten
 
 # QQ-Plot der Differenzen im Konzentrationsscore
-qqnorm(differences, main="")
+qqnorm(differences, main="", xlab = "Theoretisches Quantil", ylab = "Empirisches Quantil")
 qqline(differences, col = "red", lwd = 2)
 # Differenzen sind normalverteilt => wir können t-test verwenden
 
@@ -194,7 +194,7 @@ ks.test(differences, y="pnorm", mean=mu, sd=sqrt(sigma2))
 shapiro.test(differences) # p-value = 0.1187=> H0 wird beibehalten
 
 # QQ-Plot der Differenzen im Bearbeitungszeit
-qqnorm(differences, main="")
+qqnorm(differences, main="", xlab = "Theoretisches Quantil", ylab = "Empirisches Quantil")
 qqline(differences, col = "red", lwd = 2)
 # Differenzen sind normalverteilt => wir können t-test verwenden
 
@@ -224,7 +224,7 @@ ks.test(differences1, y="pnorm", mean=mu, sd=sqrt(sigma2))
 shapiro.test(differences1) # p-value = 0.2586 => H0 wird beibehalten
 
 # QQ-Plot der Differenzen in Konzentrationsscores für die 1. Gruppe
-qqnorm(differences1, main="")
+qqnorm(differences1, main="", xlab = "Theoretisches Quantil", ylab = "Empirisches Quantil")
 qqline(differences1, col = "red", lwd = 2)
 # Differenzen sind normalverteilt => wir können t-test verwenden
 
@@ -248,7 +248,7 @@ ks.test(differences2, y="pnorm", mean=mu, sd=sqrt(sigma2))
 shapiro.test(differences2) # p-value = 0.6598 => H0 wird beibehalten
 
 # QQ-Plot der Differenzen in Konzentrationsscores für die 2. Gruppe
-qqnorm(differences2, main="")
+qqnorm(differences2, main="", xlab = "Theoretisches Quantil", ylab = "Empirisches Quantil")
 qqline(differences2, col = "red", lwd = 2)
 # Differenzen sind normalverteilt => wir können t-test verwenden
 
@@ -261,5 +261,3 @@ var.test(differences1, differences2)
 
 t.test(differences1, differences2, alternative = "greater", var.equal = TRUE)
 # p-value = 0.783
-# Ja, die Verbesserung des Konzentrationsscores ist größer, wenn derselbe Test 
-# wiederholt wird (Gruppe 1) im Vergleich zum Wechsel von UG zu GU (Gruppe 2)
