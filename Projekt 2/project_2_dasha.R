@@ -8,8 +8,10 @@ dim(df)
 sum(is.na(df)) # 0
 
 # Betrachtung der Verteilung der KL nach Gruppe
+par(mar = c(4.2, 4, 1, 1))
 boxplot(df$KL ~ df$gruppe, col = "lightblue",
-        xlab = "Gruppe", ylab = "Konzentrationsleistung")
+        xlab = "Gruppe", ylab = "Konzentrationsleistung", 
+        cex.axis = 1.5, cex.lab = 1.5)
 # Häufigkeitsverteilung der AF
 table(df$AF)
 
@@ -21,10 +23,14 @@ attach(df)
 # Histogramme von der Bearbeitungszeit, Anzahl richtiger Zeichen, 
 # Anzahl ausgelassener (richtiger) Zeichen, Konzentrationsleistung
 par(mar = c(4.2, 4, 1, 1), mfrow = c(2, 2)) 
-hist(B, main = "", ylab = "Relative Häufigkeit", probability = TRUE) 
-hist(AR, main = "", ylab = "Relative Häufigkeit", probability = TRUE) 
-hist(AA, main = "", ylab = "Relative Häufigkeit", probability = TRUE) 
-hist(KL, main = "", ylab = "Relative Häufigkeit", probability = TRUE)
+hist(B, main = "", ylab = "Relative Häufigkeit", probability = TRUE, 
+     cex.axis = 1.4, cex.lab = 1.3) 
+hist(AR, main = "", ylab = "Relative Häufigkeit", probability = TRUE,
+     cex.axis = 1.4, cex.lab = 1.3) 
+hist(AA, main = "", ylab = "Relative Häufigkeit", probability = TRUE,
+     cex.axis = 1.4, cex.lab = 1.3) 
+hist(KL, main = "", ylab = "Relative Häufigkeit", probability = TRUE, 
+     cex.axis = 1.4, cex.lab = 1.3)
 
 par(mfrow = c(1, 1)) 
 
