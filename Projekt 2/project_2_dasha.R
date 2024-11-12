@@ -22,15 +22,15 @@ attach(df)
 # Betrachtung der Verteilung der Daten nach Entfernung der Extremwerten
 # Histogramme von der Bearbeitungszeit, Anzahl richtiger Zeichen, 
 # Anzahl ausgelassener (richtiger) Zeichen, Konzentrationsleistung
-par(mar = c(4.2, 4, 1, 1), mfrow = c(2, 2)) 
-hist(B, main = "", ylab = "Relative Häufigkeit", probability = TRUE, 
-     cex.axis = 1.4, cex.lab = 1.3) 
-hist(AR, main = "", ylab = "Relative Häufigkeit", probability = TRUE,
-     cex.axis = 1.4, cex.lab = 1.3) 
-hist(AA, main = "", ylab = "Relative Häufigkeit", probability = TRUE,
-     cex.axis = 1.4, cex.lab = 1.3) 
-hist(KL, main = "", ylab = "Relative Häufigkeit", probability = TRUE, 
-     cex.axis = 1.4, cex.lab = 1.3)
+par(mar = c(4.2, 4, 1, 1), mfrow = c(2, 2))
+hist(B, main = "", ylab = "Empirische Dichte", probability = TRUE, 
+     cex.axis = 1.2, cex.lab = 1.3, ylim = c(0, 0.02))
+hist(AR, main = "", ylab = "Empirische Dichte", probability = TRUE,
+     cex.axis = 1.2, cex.lab = 1.3, ylim = c(0, 0.3)) 
+hist(AA, main = "", ylab = "Empirische Dichte", probability = TRUE,
+     cex.axis = 1.2, cex.lab = 1.3, ylim = c(0, 0.5))
+hist(KL, main = "", ylab = "Empirische Dichte", probability = TRUE, 
+     cex.axis = 1.2, cex.lab = 1.3, ylim = c(0, 0.1))
 
 par(mfrow = c(1, 1)) 
 
