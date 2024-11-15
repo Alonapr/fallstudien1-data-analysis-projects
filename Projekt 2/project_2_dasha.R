@@ -20,17 +20,40 @@ df <- df[df$id != "14",]
 
 attach(df)
 # Betrachtung der Verteilung der Daten nach Entfernung der Extremwerten
-# Histogramme von der Bearbeitungszeit, Anzahl richtiger Zeichen, 
-# Anzahl ausgelassener (richtiger) Zeichen, Konzentrationsleistung
-par(mar = c(4.2, 4, 1, 1), mfrow = c(2, 2))
+par(mar = c(4.2, 4, 1, 1), mfrow = c(1, 2))
+barplot(table(AR), main = "", ylab = "Anzahl", xlab = "AR", 
+     cex.axis = 1.1, cex.lab = 1.3, ylim = c(0,25)) 
+barplot(table(AA), main = "", ylab = "Anzahl", xlab = "AA",
+     cex.axis = 1.1, cex.lab = 1.3, ylim = c(0,25))
+
 hist(B, main = "", ylab = "Empirische Dichte", probability = TRUE, 
-     cex.axis = 1.2, cex.lab = 1.3, ylim = c(0, 0.02))
-hist(AR, main = "", ylab = "Empirische Dichte", probability = TRUE,
-     cex.axis = 1.2, cex.lab = 1.3, ylim = c(0, 0.3)) 
-hist(AA, main = "", ylab = "Empirische Dichte", probability = TRUE,
-     cex.axis = 1.2, cex.lab = 1.3, ylim = c(0, 0.5))
+     cex.axis = 1.1, cex.lab = 1.3, ylim = c(0, 0.02))
 hist(KL, main = "", ylab = "Empirische Dichte", probability = TRUE, 
-     cex.axis = 1.2, cex.lab = 1.3, ylim = c(0, 0.1))
+     cex.axis = 1.1, cex.lab = 1.3, ylim = c(0, 0.1))
+
+num_stat <- function(data) {
+  var_name <- c("B", "KL", "AR", "AA")
+  result <- matrix(NA, nrow = length(data), ncol = 8)
+  colnames(result) <- c("Merkmal", "min", "q0.25", "q0.5", 
+                        "Arith. Mittel", "q0.75", "max", "sd")
+  for(i in 1:length(data)) {
+    var_data <- data[[i]]
+    
+    q1 <- quantile(var_data, 0.25, type = 2)
+    q3 <- quantile(var_data, 0.75, type = 2)
+    
+    result[i, 1] <- var_name[i]
+    result[i, 2] <- sprintf("%.3f", min(var_data))
+    result[i, 3] <- sprintf("%.3f", q1)
+    result[i, 4] <- sprintf("%.3f", median(var_data))
+    result[i, 5] <- sprintf("%.3f", mean(var_data))
+    result[i, 6] <- sprintf("%.3f", q3)
+    result[i, 7] <- sprintf("%.3f", max(var_data))
+    result[i, 8] <- sprintf("%.3f", sd(var_data))
+  } 
+  return(as.data.frame(result))
+}
+num_stat(df[,c(4, 8, 5, 6)])
 
 par(mfrow = c(1, 1)) 
 
