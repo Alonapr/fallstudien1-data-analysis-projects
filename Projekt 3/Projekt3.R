@@ -1,4 +1,3 @@
-setwd("C:/Users/alena/D/Universität/5Semester/Fallstudien 1/3")
 df <- read.table("Kuckuckseier.txt", header=TRUE)
 head(df)
 dim(df)
