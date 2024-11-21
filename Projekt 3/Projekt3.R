@@ -6,6 +6,7 @@ head(df)
 dim(df)
 # 45 4
 
+# 1 = WP,  2 = BP,  3 = RK, 4 = ZK
 str(df)
 
 # Überprüfung auf NA-Werte und Anschauen der Verteilung
@@ -14,6 +15,7 @@ summary(df)
 # NA-Werte werden bei den statistischen Tests ignoriert
 
 boxplot(df, main="", names=c("WP", "BP", "RK", "ZK"))
+names(df) <- c("WP_1", "BP_2", "RK_3", "ZK_4")
 
 attach(df)
 par(mar = c(4.2, 4, 1, 1), mfrow = c(2, 2))
@@ -55,6 +57,44 @@ summary(anova_result)
 # Das bedeutet, dass es signifikante Unterschiede in den Mittelwerten der Längen
 # der Kuckuckseier zwischen den Vogelarten gibt.
 
+anova_result <- aov(Length ~ Species, data = long_df[long_df$Species != "ZK_4", ])
+summary(anova_result) # p-Wert: 0.00305 -> signifikant
+
+anova_result <- aov(Length ~ Species, data = long_df[long_df$Species != "WP_1", ])
+summary(anova_result) # p-Wert: 4.43e-08 -> signifikant
+
+anova_result <- aov(Length ~ Species, data = long_df[long_df$Species != "BP_2", ])
+summary(anova_result) # p-Wert: 4.39e-05 -> signifikant
+
+anova_result <- aov(Length ~ Species, data = long_df[long_df$Species != "RK_3", ])
+summary(anova_result) # p-Wert: 8.56e-07 -> signifikant
+
+long_df <- na.omit(long_df)
+
+t.test(Length ~ Species, 
+       data=long_df[long_df$Species == "WP_1" | long_df$Species == "BP_2", ]) 
+# p-Wert = 0.002157 
+
+t.test(Length ~ Species, 
+       data=long_df[long_df$Species == "RK_3" | long_df$Species == "ZK_4", ]) 
+# p-Wert = 3.836e-06
+
+t.test(Length ~ Species, 
+       data=long_df[long_df$Species == "WP_1" | long_df$Species == "RK_3", ]) 
+# p-Wert = 0.05926
+
+t.test(Length ~ Species, 
+       data=long_df[long_df$Species == "BP_2" | long_df$Species == "ZK_4", ]) 
+# p-Wert = 5.543e-07
+
+t.test(Length ~ Species, 
+       data=long_df[long_df$Species == "WP_1" | long_df$Species == "ZK_4", ]) 
+# p-Wert = 0.0001617
+
+t.test(Length ~ Species, 
+       data=long_df[long_df$Species == "BP_2" | long_df$Species == "RK_3", ]) 
+# p-Wert = 0.0972
+
 # Tukey HSD Test, um zu bestimmen, zwischen welchen Paaren von Vogelarten 
 # die Unterschiede bestehen
 TukeyHSD(anova_result)
@@ -65,4 +105,9 @@ TukeyHSD(anova_result)
 # RK-BP  0.4022456 > 0.05, keinen signifikanten Unterschied
 # ZK-BP  0.0000002 < 0.05, signifikanten Unterschied in der Eilänge zwischen Zaunkönig und Baumpieper
 # ZK-RK  0.0000818 < 0.05, signifikanten Unterschied in der Eilänge zwischen Zaunkönig und Rotkehlchen
+
+pairwise.t.test(long_df$Length, long_df$Species, p.adjust.method="holm")
+
+
+
 
