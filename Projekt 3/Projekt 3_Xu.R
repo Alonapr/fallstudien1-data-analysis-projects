@@ -14,8 +14,7 @@ summary(df)
 # Es gibt NA-Werte aufgrund der unterschiedlichen Anzahl von Eimessungen pro Vogelart
 # NA-Werte werden bei den statistischen Tests ignoriert
 
-boxplot(df, main="", names=c("WP", "BP", "RK", "ZK"))
-names(df) <- c("WP_1", "BP_2", "RK_3", "ZK_4")
+boxplot(df, main="", names=c("WP", "BP", "RK", "ZK"), ylab = "Länge der Eier in Millimetern")
 
 attach(df)
 par(mar = c(4.2, 4, 1, 1), mfrow = c(2, 2))
