@@ -52,47 +52,57 @@ leveneTest(Length ~ Species, data = long_df)
 # Es gibt keine signifikante Unterschiede in den Varianzen. 
 
 
-#Testen auf H0: mu1 = mu2 = mu3 = mu4
+# Testen auf H0: mu1 = mu2 = mu3 = mu4
 anova_result <- aov(Length ~ Species, data = long_df)
 summary(anova_result)
 # p-Wert = 2.65e-07 < 0.05, H0 wird abgelehnt, Entscheidung für H1.
 # Das bedeutet, dass es signifikante Unterschiede in den Mittelwerten der Längen
 # der Kuckuckseier zwischen den Vogelarten gibt.
 
+# Testen auf H0: mu1 = mu2 = mu3
 anova_result <- aov(Length ~ Species, data = long_df[long_df$Species != "ZK_4", ])
 summary(anova_result) # p-Wert: 0.00305 -> signifikant
 
+# Testen auf H0: mu2 = mu3 = mu4
 anova_result <- aov(Length ~ Species, data = long_df[long_df$Species != "WP_1", ])
 summary(anova_result) # p-Wert: 4.43e-08 -> signifikant
 
+# Testen auf H0: mu1 = mu3 = mu4
 anova_result <- aov(Length ~ Species, data = long_df[long_df$Species != "BP_2", ])
 summary(anova_result) # p-Wert: 4.39e-05 -> signifikant
 
+# Testen auf H0: mu1 = mu2 = mu4
 anova_result <- aov(Length ~ Species, data = long_df[long_df$Species != "RK_3", ])
 summary(anova_result) # p-Wert: 8.56e-07 -> signifikant
 
 
 #Zweistichproben-t-Test
+# Testen auf H0: mu1 = mu2
 t.test(Length ~ Species, 
        data=long_df[long_df$Species == "WP_1" | long_df$Species == "BP_2", ], var.equal = TRUE) 
 # p-Wert = 0.001781 
 
+# Testen auf H0: mu3 = mu4
 t.test(Length ~ Species, 
        data=long_df[long_df$Species == "RK_3" | long_df$Species == "ZK_4", ], var.equal = TRUE) 
 # p-Wert = 3.469e-06
 
+# Testen auf H0: mu1 = mu3
 t.test(Length ~ Species, 
        data=long_df[long_df$Species == "WP_1" | long_df$Species == "RK_3", ], var.equal = TRUE) 
 # p-Wert = 0.1039
 
+# Testen auf H0: mu2 = mu4
 t.test(Length ~ Species, 
        data=long_df[long_df$Species == "BP_2" | long_df$Species == "ZK_4", ], var.equal = TRUE) 
 # p-Wert = 4.595e-07
 
+# Testen auf H0: mu1 = mu4
 t.test(Length ~ Species, 
        data=long_df[long_df$Species == "WP_1" | long_df$Species == "ZK_4", ], var.equal = TRUE) 
 # p-Wert = 0.0004502
 
+# Testen auf H0: mu2 = mu3
 t.test(Length ~ Species, 
        data=long_df[long_df$Species == "BP_2" | long_df$Species == "RK_3", ], var.equal = TRUE) 
 # p-Wert = 0.09326
@@ -141,14 +151,14 @@ var.test(Length ~ Species,
 4.595e-07 < 0.05/(7 - 1) # TRUE H24
 3.469e-06 < 0.05/(7 - 2) # TRUE H34
 0.0004502 < 0.05/(7 - 3) # TRUE H14
-0.001781 < 0.05/(7 - 4) # TRUE, H12
+0.001781 < 0.05/(7 - 4) # TRUE H12
 0.09326 < 0.05/(7 - 5) # FALSE H23
 0.1039 < 0.05/(7 - 6) # FALSE H13
 
 4.595e-07 * (7 - 1) # TRUE H24
 3.469e-06 * (7 - 2) # TRUE H34
 0.0004502 * (7 - 3) # TRUE H14
-0.001781 * (7 - 4) # TRUE, H12
+0.001781 * (7 - 4) # TRUE H12
 0.09326 * (7 - 5) # FALSE H23
 0.1039 * (7 - 6) # FALSE H13
 
