@@ -106,8 +106,6 @@ TukeyHSD(anova_result)
 # ZK-BP  0.0000002 < 0.05, signifikanten Unterschied in der Eilänge zwischen Zaunkönig und Baumpieper
 # ZK-RK  0.0000818 < 0.05, signifikanten Unterschied in der Eilänge zwischen Zaunkönig und Rotkehlchen
 
-pairwise.t.test(long_df$Length, long_df$Species, p.adjust.method="holm")
-
-
+pairwise.t.test(long_df$Length, long_df$Species, p.adjust.method="holm", pool.sd = FALSE)
 
 
