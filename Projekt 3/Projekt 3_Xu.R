@@ -5,7 +5,6 @@ head(df)
 dim(df)
 # 45 4
 
-# 1 = WP,  2 = BP,  3 = RK, 4 = ZK
 str(df)
 
 # Überprüfung auf NA-Werte und Anschauen der Verteilung
@@ -18,13 +17,13 @@ boxplot(df, main="", names=c("WP", "BP", "RK", "ZK"), ylab = "Länge der Eier in
 
 attach(df)
 par(mar = c(4.2, 4, 1, 1), mfrow = c(2, 2))
-hist(WP_1, main = "", ylab = "Empirische Dichte", probability = TRUE, 
+hist(WP, main = "", ylab = "Empirische Dichte", probability = TRUE, 
      cex.axis = 1.1, cex.lab = 1.3)
-hist(BP_2, main = "", ylab = "Empirische Dichte", probability = TRUE, 
+hist(BP, main = "", ylab = "Empirische Dichte", probability = TRUE, 
      cex.axis = 1.1, cex.lab = 1.3)
-hist(RK_3, main = "", ylab = "Empirische Dichte", probability = TRUE, 
+hist(RK, main = "", ylab = "Empirische Dichte", probability = TRUE, 
      cex.axis = 1.1, cex.lab = 1.3)
-hist(ZK_4, main = "", ylab = "Empirische Dichte", probability = TRUE, 
+hist(ZK, main = "", ylab = "Empirische Dichte", probability = TRUE, 
      cex.axis = 1.1, cex.lab = 1.3)
 
 #-----------------------------------------------------------------------------------------
@@ -38,13 +37,14 @@ for (i in 1:4){
 }
 # spricht nichts gegen eine Normalverteilung der Variablen
 
-# Überprüfung auf Varianzhomogenität
+# Umformen vom Datensatz
+# 1 = WP,  2 = BP,  3 = RK, 4 = ZK
+names(df) <- c("WP_1", "BP_2", "RK_3", "ZK_4")
 long_df <- stack(df)
 names(long_df) <- c("Length", "Species")  # Umbenennen der Spalten
 long_df <- na.omit(long_df)
 
-
-# Levene's Test auf Varianzhomogenität
+# Überprüfung auf Varianzhomogenität mit Levene's Test
 # H0: Die Varianzen in allen Gruppen sind gleich (Varianzhomogenität).
 # H1: Mindestens eine Gruppe hat eine andere Varianz (keine Varianzhomogenität).
 leveneTest(Length ~ Species, data = long_df)
@@ -100,29 +100,6 @@ t.test(Length ~ Species,
 
 #-----------------------------------------------------------------------------------------
 #Bonferroni-Holm-Verfahren
-
-#KS-Test
-
-#1. WP
-ks.test(long_df[long_df$Species == "WP_1",1], y = "pnorm", mean = mean(long_df[long_df$Species == "WP_1",1]),
-        sd = sqrt(var(long_df[long_df$Species == "WP_1",1])))
-#p-Wert  = 0.2859
-
-#2. BP
-ks.test(long_df[long_df$Species == "BP_2",1], y = "pnorm", mean = mean(long_df[long_df$Species == "BP_2",1]),
-        sd = sqrt(var(long_df[long_df$Species == "BP_2",1])))
-#p-Wert  = 0.5755
-
-#3. RK
-ks.test(long_df[long_df$Species == "RK_3",1], y = "pnorm", mean = mean(long_df[long_df$Species == "RK_3",1]),
-        sd = sqrt(var(long_df[long_df$Species == "RK_3",1])))
-#p-Wert  = 0.8098
-
-#4. ZK
-ks.test(long_df[long_df$Species == "ZK_4",1], y = "pnorm", mean = mean(long_df[long_df$Species == "ZK_4",1]),
-        sd = sqrt(var(long_df[long_df$Species == "ZK_4",1])))
-#p-Wert  = 0.8978
-
 
 #F-Test
 
