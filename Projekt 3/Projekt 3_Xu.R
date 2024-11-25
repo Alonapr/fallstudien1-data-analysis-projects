@@ -133,4 +133,28 @@ var.test(Length ~ Species,
          data=long_df[long_df$Species == "RK_3" | long_df$Species == "ZK_4", ])
 #p-Wert = 0.7906
 
-#Zweistichproben-t-Tests wie beim Abschlussprinzip
+# Zweistichproben-t-Tests wie beim Abschlussprinzip
+
+# Ordnen wir die p-Werte von Zweistichproben-t-Tests nach:
+# 4.595e-07 < 3.469e-06 < 0.0004502 < 0.001781 < 0.09326 < 0.1039
+
+4.595e-07 < 0.05/(7 - 1) # TRUE H24
+3.469e-06 < 0.05/(7 - 2) # TRUE H34
+0.0004502 < 0.05/(7 - 3) # TRUE H14
+0.001781 < 0.05/(7 - 4) # TRUE, H12
+0.09326 < 0.05/(7 - 5) # FALSE H23
+0.1039 < 0.05/(7 - 6) # FALSE H13
+
+4.595e-07 * (7 - 1) # TRUE H24
+3.469e-06 * (7 - 2) # TRUE H34
+0.0004502 * (7 - 3) # TRUE H14
+0.001781 * (7 - 4) # TRUE, H12
+0.09326 * (7 - 5) # FALSE H23
+0.1039 * (7 - 6) # FALSE H13
+
+p_values <- c(4.595e-07, 3.469e-06, 0.0004502, 0.001781, 0.09326, 0.1039)
+adjusted_p_values <- p.adjust(p_values, method = "holm")
+# 2.7570e-06 1.7345e-05 1.8008e-03 5.3430e-03 1.8652e-01 1.8652e-01
+
+# adjusted_p_values < 0.05
+# TRUE  TRUE  TRUE  TRUE FALSE FALSE
