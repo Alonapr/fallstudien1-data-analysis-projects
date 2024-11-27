@@ -13,29 +13,133 @@ summary(df)
 # Es gibt NA-Werte aufgrund der unterschiedlichen Anzahl von Eimessungen pro Vogelart
 # NA-Werte werden bei den statistischen Tests ignoriert
 
-boxplot(df, main="", names=c("WP", "BP", "RK", "ZK"), ylab = "Länge der Eier in Millimetern")
-
 attach(df)
-par(mar = c(4.2, 4, 1, 1), mfrow = c(2, 2))
-hist(WP, main = "", ylab = "Empirische Dichte", probability = TRUE, 
-     cex.axis = 1.1, cex.lab = 1.3)
-hist(BP, main = "", ylab = "Empirische Dichte", probability = TRUE, 
-     cex.axis = 1.1, cex.lab = 1.3)
-hist(RK, main = "", ylab = "Empirische Dichte", probability = TRUE, 
-     cex.axis = 1.1, cex.lab = 1.3)
-hist(ZK, main = "", ylab = "Empirische Dichte", probability = TRUE, 
-     cex.axis = 1.1, cex.lab = 1.3)
+
+#-------------------------------------------------------------------------------
+#Grafiken und Kenzahlen (Deskription, Verteilungsannahme, Varianzhomogenität)
+
+# kennzahlen - Funktion zur Berechnung statistischer Kennzahlen
+#
+# Eingabe:
+#   data         - Data Frame mit metrisch skalierten Variablen
+#
+# Ausgabe:
+#   Data Frame: Data Frame mit den Varibalen des urspruenglichen Data Frames 
+#   in Zeilen und den berechneten Kennzahlen in den Spalten
+#   (arithmetisches Mittel, Standardabweichung, Minimum, 25%-Quantil, Median,
+#   75%-Quantil und Maximum)
+
+kennzahlen <- function(data) {
+  var_name <- names(data)
+  result <- matrix(NA, nrow = length(data), ncol = 8)
+  colnames(result) <- c("Merkmal", "Arithm. Mittel", "sd", "Minimum", 
+                        "25% Quantil", "Median", "75% Quantil", "Maximum")
+  for(i in 1:length(data)) {
+    var_data <- data[[i]]
+    
+    q1 <- quantile(var_data, 0.25, type = 2, na.rm = TRUE)
+    q3 <- quantile(var_data, 0.75, type = 2, na.rm = TRUE)
+    
+    result[i, 1] <- var_name[i]
+    result[i, 2] <- sprintf("%.3f", mean(var_data, na.rm = TRUE))
+    result[i, 3] <- sprintf("%.3f", sd(var_data, na.rm = TRUE))
+    result[i, 4] <- sprintf("%.3f", min(var_data, na.rm = TRUE))
+    result[i, 5] <- sprintf("%.3f", q1)
+    result[i, 6] <- sprintf("%.3f", median(var_data, na.rm = TRUE))
+    result[i, 7] <- sprintf("%.3f", q3)
+    result[i, 8] <- sprintf("%.3f", max(var_data, na.rm = TRUE))
+    
+  }
+  result
+}
+
+kennzahlen(df)
+#Merkmal Arithm. Mittel sd      Minimum  25% Quantil Median   75% Quantil Maximum 
+#[1,] "WP_1"  "22.154"       "0.979" "19.650" "21.650"    "21.950" "22.750"    "24.450"
+#[2,] "BP_2"  "23.093"       "0.905" "21.050" "22.450"    "23.350" "23.850"    "24.100"
+#[3,] "RK_3"  "22.594"       "0.690" "21.050" "22.100"    "22.600" "23.100"    "23.850"
+#[4,] "ZK_4"  "21.127"       "0.739" "19.850" "20.800"    "21.050" "22.000"    "22.250"
+
+
+#pdf("boxplot.pdf", width = 10, height = 6)
+windows(width = 10, height = 6)
+opar <- par (mar = c( 4, 5, 0.2, 0.2), lwd = 2,
+             cex = 1.4, las = 1, cex.axis = 1.8)
+boxplot(df, main="", names=c("WP", "BP", "RK", "ZK"),
+        ylab = "")
+title(ylab = "Länge (in Millimetern)", line = 3.5, cex.lab = 1.8)
+par(opar)
+#dev.off()
+
+#pdf("hist.pdf", width = 10, height = 6)
+windows(width = 10, height = 6)
+opar <- par (mar = c( 4, 5, 0.2, 0.2), lwd = 2,
+             cex = 1.4, las = 1, mfrow = c(2,2), cex.axis = 1.8)
+hist(WP, freq = FALSE,
+     main = "", xlim = c(19,25), ylab = "", xlab = "",
+     cex.axis = 1.5, 
+)
+title (xlab = "WP", line = 3, cex.lab = 1.6)
+title (ylab = "empirische Dichte", line = 3.5, cex.lab = 1.6)
+hist(BP, freq = FALSE,
+     main = "", xlim = c(19,25), ylab = "", xlab = "",
+     cex.axis = 1.5
+)
+title (xlab = "BP", line = 3, cex.lab = 1.6)
+title (ylab = "empirische Dichte", line = 3.5, cex.lab = 1.6)
+hist(RK, freq = FALSE,
+     main = "", xlim = c(19,25), ylab = "", xlab = "",
+     cex.axis = 1.5, cex.lab = 1.6
+)
+title (xlab = "RK", line = 3, cex.lab = 1.6)
+title (ylab = "empirische Dichte", line = 3.5, cex.lab = 1.6)
+hist(ZK, freq = FALSE,
+     main = "", xlim = c(19,25), ylab = "", xlab = "",
+     cex.axis = 1.5
+)
+title (xlab = "ZK", line = 3, cex.lab = 1.6)
+title (ylab = "empirische Dichte", line = 3.5, cex.lab = 1.6)
+par(opar)
+#dev.off()
+
+# Überprüfung auf Normalverteilung mit NQ-Plots
+
+#pdf("QQ.pdf", width = 10, height = 7)
+windows(width = 10, height = 7)
+opar <- par (mar = c(4, 5.5, 1.5, 0.2), lwd = 2,
+             cex = 1.4, las = 1, mfrow = c(2,2))
+qqnorm(WP, pch = 16, main = "WP", xlab= "", ylab = "", cex = 1.4, cex.axis = 1.4
+)
+  title (xlab = "Theoretisches Quantil", line = 2.5, cex.lab = 1.6)
+  title (ylab = "Empirisches Quantil", line = 3.7, cex.lab = 1.6)
+qqline(WP, col = "red", lwd = 2)
+
+qqnorm(BP, pch = 16, main = "BP", xlab= "", ylab = "", cex = 1.4, cex.axis = 1.4
+)
+title (xlab = "Theoretisches Quantil", line = 2.5, cex.lab = 1.6)
+title (ylab = "Empirisches Quantil", line = 3.7, cex.lab = 1.6)
+qqline(BP, col = "red", lwd = 2)
+
+qqnorm(RK, pch = 16, main = "RK", xlab= "", ylab = "", cex = 1.4, cex.axis = 1.4
+)
+title (xlab = "Theoretisches Quantil", line = 2.5, cex.lab = 1.6)
+title (ylab = "Empirisches Quantil", line = 3.7, cex.lab = 1.6)
+qqline(RK, col = "red", lwd = 2)
+
+qqnorm(ZK, pch = 16, main = "ZK", xlab= "", ylab = "", cex = 1.4, cex.axis = 1.4
+)
+title (xlab = "Theoretisches Quantil", line = 2.5, cex.lab = 1.6)
+title (ylab = "Empirisches Quantil", line = 3.7, cex.lab = 1.6)
+qqline(ZK, col = "red", lwd = 2)
+par(opar)
+#dev.off
+# spricht nichts gegen eine Normalverteilung der Variablen
+
+
 
 #-----------------------------------------------------------------------------------------
 #Abschlussprinzip
 
-# Überprüfung auf Normalverteilung mit NQ-Plots
-for (i in 1:4){
-  qqnorm(df[[i]], main = colnames(df)[i], xlab = "Theoretisches Quantil", 
-         ylab = "Empirisches Quantil")
-  qqline(df[[i]], col = "red", lwd = 2)
-}
-# spricht nichts gegen eine Normalverteilung der Variablen
 
 # Umformen vom Datensatz
 # 1 = WP,  2 = BP,  3 = RK, 4 = ZK
@@ -162,6 +266,12 @@ var.test(Length ~ Species,
 0.09326 * (7 - 5) # FALSE H23
 0.1039 * (7 - 6) # FALSE H13
 
+p_values <- c(4.595e-07, 3.469e-06, 0.0004502, 0.001781, 0.09326, 0.1039)
+adjusted_p_values <- p.adjust(p_values, method = "holm")
+# 2.7570e-06 1.7345e-05 1.8008e-03 5.3430e-03 1.8652e-01 1.8652e-01
+
+# adjusted_p_values < 0.05
+# TRUE  TRUE  TRUE  TRUE FALSE FALSE
 p_values <- c(4.595e-07, 3.469e-06, 0.0004502, 0.001781, 0.09326, 0.1039)
 adjusted_p_values <- p.adjust(p_values, method = "holm")
 # 2.7570e-06 1.7345e-05 1.8008e-03 5.3430e-03 1.8652e-01 1.8652e-01
