@@ -62,7 +62,7 @@ kennzahlen(df)
 
 
 #pdf("boxplot.pdf", width = 10, height = 6)
-windows(width = 10, height = 6)
+#windows(width = 10, height = 6)
 opar <- par (mar = c( 4, 5, 0.2, 0.2), lwd = 2,
              cex = 1.4, las = 1, cex.axis = 1.8)
 boxplot(df, main="", names=c("WP", "BP", "RK", "ZK"),
@@ -72,7 +72,7 @@ par(opar)
 #dev.off()
 
 #pdf("hist.pdf", width = 10, height = 6)
-windows(width = 10, height = 6)
+#windows(width = 10, height = 6)
 opar <- par (mar = c( 4, 5, 0.2, 0.2), lwd = 2,
              cex = 1.4, las = 1, mfrow = c(2,2), cex.axis = 1.8)
 hist(WP, freq = FALSE,
@@ -105,7 +105,7 @@ par(opar)
 # Überprüfung auf Normalverteilung mit NQ-Plots
 
 #pdf("QQ.pdf", width = 10, height = 7)
-windows(width = 10, height = 7)
+#windows(width = 10, height = 7)
 opar <- par (mar = c(4, 5.5, 1.5, 0.2), lwd = 2,
              cex = 1.4, las = 1, mfrow = c(2,2))
 qqnorm(WP, pch = 16, main = "WP", xlab= "", ylab = "", cex = 1.4, cex.axis = 1.4
@@ -134,7 +134,6 @@ qqline(ZK, col = "red", lwd = 2)
 par(opar)
 #dev.off
 # spricht nichts gegen eine Normalverteilung der Variablen
-
 
 
 #-----------------------------------------------------------------------------------------
@@ -266,12 +265,6 @@ var.test(Length ~ Species,
 0.09326 * (7 - 5) # FALSE H23
 0.1039 * (7 - 6) # FALSE H13
 
-p_values <- c(4.595e-07, 3.469e-06, 0.0004502, 0.001781, 0.09326, 0.1039)
-adjusted_p_values <- p.adjust(p_values, method = "holm")
-# 2.7570e-06 1.7345e-05 1.8008e-03 5.3430e-03 1.8652e-01 1.8652e-01
-
-# adjusted_p_values < 0.05
-# TRUE  TRUE  TRUE  TRUE FALSE FALSE
 p_values <- c(4.595e-07, 3.469e-06, 0.0004502, 0.001781, 0.09326, 0.1039)
 adjusted_p_values <- p.adjust(p_values, method = "holm")
 # 2.7570e-06 1.7345e-05 1.8008e-03 5.3430e-03 1.8652e-01 1.8652e-01
