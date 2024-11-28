@@ -1,5 +1,3 @@
-library(car) #Für Levene-Test
-
 df <- read.table("Kuckuckseier.txt", header=TRUE)
 head(df)
 dim(df)
@@ -215,37 +213,6 @@ t.test(Length ~ Species,
 #-----------------------------------------------------------------------------------------
 #Bonferroni-Holm-Verfahren
 
-#F-Test
-
-#1-2 WP-BP
-var.test(Length ~ Species, 
-         data=long_df[long_df$Species == "WP_1" | long_df$Species == "BP_2", ])
-#p-Wert = 0.7826
-
-#1-3 WP-RK
-var.test(Length ~ Species, 
-         data=long_df[long_df$Species == "WP_1" | long_df$Species == "RK_3", ])
-#p-Wert = 0.1413
-
-#1-4 WP-ZK
-var.test(Length ~ Species, 
-         data=long_df[long_df$Species == "WP_1" | long_df$Species == "ZK_4", ])
-#p-Wert = 0.2538
-
-#2-3 BP-RK
-var.test(Length ~ Species, 
-         data=long_df[long_df$Species == "BP_2" | long_df$Species == "RK_3", ])
-#p-Wert = 0.3077
-
-#2-4 BP - ZK
-var.test(Length ~ Species, 
-         data=long_df[long_df$Species == "BP_2" | long_df$Species == "ZK_4", ])
-#p-Wert = 0.4581
-
-#3-4 RK - ZK
-var.test(Length ~ Species, 
-         data=long_df[long_df$Species == "RK_3" | long_df$Species == "ZK_4", ])
-#p-Wert = 0.7906
 
 # Zweistichproben-t-Tests wie beim Abschlussprinzip
 
