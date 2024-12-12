@@ -20,7 +20,6 @@ barplot(table(NrBronze), main = "", ylab = "Anzahl", xlab = "NrBronze",
 barplot(table(Total), main = "", ylab = "Anzahl", xlab = "Total",
         cex.axis = 1.1, cex.lab = 1.3)
 
-
 #1
 #Abhängigkeit zwischen dem Land und der Sportart bezüglich der Gesamtanzahl an Medaillen
 ggplot(df, aes(x = Land, y = Total, fill = Sportart)) +
@@ -42,23 +41,21 @@ chisq.test(kontingenztafel1)
 #2
 #Abhängigkeit zwischen der Medaillenfarbe und dem Land für jede Sportart
 
-# Chi-Quadrat-Test für jede Sportart
+# Chi-Quadrat-Test mit Monte-Carlo-Simulation für jede Sportart
 for (sport in unique(df$Sportart)) {
-  # Filter für die spezifische Sportart
   subset_data <- subset(df, sport == Sportart)
   
   # Erstellen einer Kontingenztafel der Medaillenfarben für jedes Land
   medaillen_matrix <- xtabs(cbind(NrGold, NrSilber, NrBronze) ~ Land, data = subset_data)
   
-  # Chi-Quadrat-Test durchführen
-  chi_test <- chisq.test(medaillen_matrix)
+  # Chi-Quadrat-Test mit 10000 Permutationen durchführen
+  chi_test <- chisq.test(medaillen_matrix, simulate.p.value = TRUE, B = 10000)
   
-  # Ergebnis anzeigen
   print(paste("Chi-Quadrat-Test für Sportart:", sport))
   print(chi_test)
 }
 
-# Erstellen der Daten im Langformat (ohne externe Bibliotheken)
+# Erstellen der Daten im Langformat
 df_long <- data.frame(
   Land = rep(Land, 3),
   Sportart = rep(Sportart, 3),
@@ -66,11 +63,14 @@ df_long <- data.frame(
   Anzahl = c(df$NrGold, df$NrSilber, df$NrBronze)
 )
 
-# Gestapeltes Balkendiagramm mit ggplot2
+# Medaillenverteilung nach Land und Sportart
 ggplot(df_long, aes(x = Land, y = Anzahl, fill = Medaille)) +
   geom_bar(position = "stack", stat = "identity") +
   facet_wrap(~ Sportart) +
+  scale_fill_manual(values = c("Gold" = "gold", "Silber" = "#C0C0C0", "Bronze" = "#CD7F32")) + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  labs(title = "Medaillenverteilung nach Land und Sportart", x = "Land", y = "Anzahl Medaillen", fill = "Medaille")
-                  
+  labs(x = "Land", y = "Anzahl Medaillen", fill = "Medaille")
+
+#3
+#Abhängigkeit zwischen der Medaillenfarbe und der Sportart für jedes Land         
 
