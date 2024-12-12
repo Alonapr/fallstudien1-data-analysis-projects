@@ -41,18 +41,17 @@ chisq.test(kontingenztafel1)
 #2
 #Abhängigkeit zwischen der Medaillenfarbe und dem Land für jede Sportart
 
-# Chi-Quadrat-Test mit Monte-Carlo-Simulation für jede Sportart
+# # Fisher's exakter Test für jede Sportart
 for (sport in unique(df$Sportart)) {
   subset_data <- subset(df, sport == Sportart)
   
   # Erstellen einer Kontingenztafel der Medaillenfarben für jedes Land
   medaillen_matrix <- xtabs(cbind(NrGold, NrSilber, NrBronze) ~ Land, data = subset_data)
   
-  # Chi-Quadrat-Test mit 10000 Permutationen durchführen
-  chi_test <- chisq.test(medaillen_matrix, simulate.p.value = TRUE, B = 10000)
+  fisher_test <- fisher.test(medaillen_matrix)
   
   print(paste("Chi-Quadrat-Test für Sportart:", sport))
-  print(chi_test)
+  print(fisher_test)
 }
 
 # Erstellen der Daten im Langformat
