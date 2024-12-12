@@ -1,14 +1,14 @@
 library(readxl)
 library(ggplot2)
 
-ds <- read_xlsx("Medaillen.xlsx")
-head(ds)
-str(ds)
+df <- read_xlsx("Medaillen.xlsx")
+head(df)
+str(df)
 
-summary(ds)
+summary(df)
 #keine NA-Werte
 
-attach(ds)
+attach(df)
 #Deskriptive Analyse
 par(mar = c(4.2, 4, 1, 1), mfrow = c(2, 2))
 barplot(table(NrGold), main = "", ylab = "Anzahl", xlab = "NrGold", 
@@ -23,23 +23,54 @@ barplot(table(Total), main = "", ylab = "Anzahl", xlab = "Total",
 
 #1
 #Abhängigkeit zwischen dem Land und der Sportart bezüglich der Gesamtanzahl an Medaillen
-ggplot(ds, aes(x = Land, y = Total, fill = Sportart)) +
+ggplot(df, aes(x = Land, y = Total, fill = Sportart)) +
   geom_bar(stat = "identity") + 
   scale_fill_manual(values = c("lightsalmon", "cornsilk", "lightgreen", "plum1")) + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 14),  
         axis.text.y = element_text(size = 14),                        
         axis.title = element_text(size = 16))                         
 
-
+# Erstellen der Kontingenztafel
+kontingenztafel1 <- xtabs(Total ~ Land + Sportart, data = df)
+kontingenztafel1
 # Chi-Quadrat-Test
 # Um zu prüfen, ob es eine statistisch signifikante Abhängigkeit 
-# zwischen Land und Total gibt
-kontingenztafel1 <- xtabs(Total ~ Land + Sportart, data = ds)
+# zwischen Land und Sportart bezüglich Total gibt
 chisq.test(kontingenztafel1)
 #p-value = 4.189e-14 < 0.05 deutet auf signifikante Abhänigkeit hin
 
-# ANOVA-Modell, um die Effekte von Land und Sportart auf die Medaillenanzahl zu untersuchen
-anova_modell <- aov(Total ~ Land + Sportart)
-summary(anova_modell)
+#2
+#Abhängigkeit zwischen der Medaillenfarbe und dem Land für jede Sportart
+
+# Chi-Quadrat-Test für jede Sportart
+for (sport in unique(df$Sportart)) {
+  # Filter für die spezifische Sportart
+  subset_data <- subset(df, sport == Sportart)
+  
+  # Erstellen einer Kontingenztafel der Medaillenfarben für jedes Land
+  medaillen_matrix <- xtabs(cbind(NrGold, NrSilber, NrBronze) ~ Land, data = subset_data)
+  
+  # Chi-Quadrat-Test durchführen
+  chi_test <- chisq.test(medaillen_matrix)
+  
+  # Ergebnis anzeigen
+  print(paste("Chi-Quadrat-Test für Sportart:", sport))
+  print(chi_test)
+}
+
+# Erstellen der Daten im Langformat (ohne externe Bibliotheken)
+df_long <- data.frame(
+  Land = rep(Land, 3),
+  Sportart = rep(Sportart, 3),
+  Medaille = factor(rep(c("Gold", "Silber", "Bronze"), each = nrow(df))),
+  Anzahl = c(df$NrGold, df$NrSilber, df$NrBronze)
+)
+
+# Gestapeltes Balkendiagramm mit ggplot2
+ggplot(df_long, aes(x = Land, y = Anzahl, fill = Medaille)) +
+  geom_bar(position = "stack", stat = "identity") +
+  facet_wrap(~ Sportart) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Medaillenverteilung nach Land und Sportart", x = "Land", y = "Anzahl Medaillen", fill = "Medaille")
                   
 
