@@ -2,7 +2,7 @@
 library(vcd)
 library(ggplot2)
 
-setwd("C:/Users/Hanji/OneDrive/Studium/WS 24-25/Fallstudien/Projekt 4")
+#setwd("C:/Users/Hanji/OneDrive/Studium/WS 24-25/Fallstudien/Projekt 4")
 
 df = read.csv2("Medaillen.csv", header = TRUE)
 
@@ -176,6 +176,7 @@ print(table_pro_Sportart)
 
 fisher_test <- fisher.test(table_pro_Sportart[,,1])
 print(fisher_test)
+#Ballsport
 # Fisher's Exact Test for Count Data
 # 
 # data:  table_pro_Sportart[, , 1]
@@ -186,7 +187,7 @@ print(fisher_test)
 results <- list()
 
 for (i in 1:4) {
-
+  
   fisher_test <- fisher.test(table_pro_Sportart[,,i])
   
   # Ergebnisse speichern
@@ -205,4 +206,82 @@ for (i in 1:4) {
 }
 
 
+#Aufgabe 3
 
+land = c("Australien", "Frankreich", "Japan", "USA", "VR China")
+
+# Kontingenztafel erstellen
+table_pro_Land <- xtabs(Anzahl ~ Medaille + Sportart + Land, data = df_long)
+print(table_pro_Land)
+# , , Land = Australien
+# 
+# Sportart
+# Medaille Ballsportart Kampfsport Leichtathletik Schwimmen
+# Bronze            1          2              4         3
+# Gold              1          0              1         7
+# Silber            1          0              2         9
+# 
+# , , Land = Frankreich
+# 
+# Sportart
+# Medaille Ballsportart Kampfsport Leichtathletik Schwimmen
+# Bronze            2          8              0         2
+# Gold              2          3              0         4
+# Silber            5          4              1         1
+# 
+# , , Land = Japan
+# 
+# Sportart
+# Medaille Ballsportart Kampfsport Leichtathletik Schwimmen
+# Bronze            3          5              0         0
+# Gold              0         11              1         0
+# Silber            1          3              0         1
+# 
+# , , Land = USA
+# 
+# Sportart
+# Medaille Ballsportart Kampfsport Leichtathletik Schwimmen
+# Bronze            5          5              9         7
+# Gold              3          2             14         8
+# Silber            2          2             11        14
+# 
+# , , Land = VR China
+# 
+# Sportart
+# Medaille Ballsportart Kampfsport Leichtathletik Schwimmen
+# Bronze            0          6              2         7
+# Gold              8          3              1         4
+# Silber            6          4              1         3
+
+#Chi-Quadrat-Test nicht sinnvoll, da viele Beobachtungen kleiner als 5 sind.
+
+fisher_test <- fisher.test(table_pro_Land[,,1])
+print(fisher_test)
+#Australien
+# Fisher's Exact Test for Count Data
+# 
+# data:  table_pro_Land[, , 1]
+# p-value = 0.1837
+# alternative hypothesis: two.sided
+
+# Iteriere über alle Sportarten
+results <- list()
+
+for (i in 1:5) {
+  
+  fisher_test <- fisher.test(table_pro_Land[,,i])
+  
+  # Ergebnisse speichern
+  results[[land[i]]] <- list(
+    Land = land[i],
+    Tabelle = table_pro_Land[,,i],
+    Test = fisher_test
+  )
+}
+
+# Ergebnisse anzeigen
+for (i in 1:5) {
+  cat("\nLand:", land[i], "\n")
+  print(results[[land[i]]]$Tabelle)
+  print(results[[land[i]]]$Test)
+}
