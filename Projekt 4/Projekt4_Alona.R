@@ -21,10 +21,10 @@ barplot(table(Total), main = "", ylab = "Anzahl", xlab = "Total",
         cex.axis = 1.1, cex.lab = 1.3)
 
 #1
-#Abhängigkeit zwischen dem Land und der Sportart bezüglich der Gesamtanzahl an Medaillen
+# Abhängigkeit zwischen dem Land und der Sportart bezüglich der Gesamtanzahl an Medaillen
 ggplot(df, aes(x = Land, y = Total, fill = Sportart)) +
   geom_bar(stat = "identity") + 
-  scale_fill_manual(values = c("lightsalmon", "cornsilk", "lightgreen", "lightblue")) + 
+  scale_fill_manual(values = c("orange", "lightgreen", "purple", "lightblue")) + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 14),  
         axis.text.y = element_text(size = 14),                        
         axis.title = element_text(size = 16))                         
@@ -36,10 +36,10 @@ kontingenztafel1
 # Um zu prüfen, ob es eine statistisch signifikante Abhängigkeit 
 # zwischen Land und Sportart bezüglich Total gibt
 chisq.test(kontingenztafel1)
-#p-value = 4.189e-14 < 0.05 deutet auf signifikante Abhänigkeit hin
+# p-value = 4.189e-14 < 0.05 deutet auf signifikante Abhänigkeit hin
 
 #2
-#Abhängigkeit zwischen der Medaillenfarbe und dem Land für jede Sportart
+# Abhängigkeit zwischen der Medaillenfarbe und dem Land für jede Sportart
 
 # Fisher's Exakter Test für jede Sportart
 for (sport in unique(df$Sportart)) {
@@ -53,6 +53,11 @@ for (sport in unique(df$Sportart)) {
   print(paste("Fisher's Exakter Test für Sportart:", sport))
   print(fisher_test)
 }
+# Kampfsport: p-value = 0.2997 > 0.05
+# Leichtathletik: p-value = 0.5348 > 0.05
+# Ballsportart: p-value = 0.02756 < 0.05 => signifikante Zusammenhang zwischen 
+# dem Land und der Medaillenfarbe in der Kategorie der Ballsportarten
+# Schwimmen: p-value = 0.2549 > 0.05
 
 # Erstellen der Daten im Langformat
 df_long <- data.frame(
@@ -71,7 +76,7 @@ ggplot(df_long, aes(x = Land, y = Anzahl, fill = Medaille)) +
   labs(x = "Land", y = "Anzahl Medaillen", fill = "Medaille")
 
 #3
-#Abhängigkeit zwischen der Medaillenfarbe und der Sportart für jedes Land         
+# Abhängigkeit zwischen der Medaillenfarbe und der Sportart für jedes Land         
 # Fisher's Exakter Test für jedes Land
 for (land in unique(df$Land)) {
   subset_data <- subset(df, land == Land)
@@ -84,3 +89,10 @@ for (land in unique(df$Land)) {
   print(paste("Fisher's Exakter Test für Land:", land))
   print(fisher_test)
 }
+# USA: p-value = 0.3431 > 0.05
+# VR China: p-value = 0.03666 < 0.05 => signifikante Zusammenhang zwischen 
+# der Sportart und der Medaillenfarbe in VR China
+# Japan: p-value = 0.04942 < 0.05 => signifikante Zusammenhang zwischen 
+# der Sportart und der Medaillenfarbe in Japan
+# Australien: p-value = 0.1837 > 0.05
+# Frankreich: p-value = 0.2334 > 0.05
