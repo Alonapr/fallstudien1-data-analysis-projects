@@ -24,7 +24,7 @@ barplot(table(Total), main = "", ylab = "Anzahl", xlab = "Total",
 #Abhängigkeit zwischen dem Land und der Sportart bezüglich der Gesamtanzahl an Medaillen
 ggplot(df, aes(x = Land, y = Total, fill = Sportart)) +
   geom_bar(stat = "identity") + 
-  scale_fill_manual(values = c("lightsalmon", "cornsilk", "lightgreen", "plum1")) + 
+  scale_fill_manual(values = c("lightsalmon", "cornsilk", "lightgreen", "lightblue")) + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 14),  
         axis.text.y = element_text(size = 14),                        
         axis.title = element_text(size = 16))                         
@@ -41,7 +41,7 @@ chisq.test(kontingenztafel1)
 #2
 #Abhängigkeit zwischen der Medaillenfarbe und dem Land für jede Sportart
 
-# # Fisher's exakter Test für jede Sportart
+# Fisher's Exakter Test für jede Sportart
 for (sport in unique(df$Sportart)) {
   subset_data <- subset(df, sport == Sportart)
   
@@ -50,7 +50,7 @@ for (sport in unique(df$Sportart)) {
   
   fisher_test <- fisher.test(medaillen_matrix)
   
-  print(paste("Chi-Quadrat-Test für Sportart:", sport))
+  print(paste("Fisher's Exakter Test für Sportart:", sport))
   print(fisher_test)
 }
 
@@ -72,4 +72,15 @@ ggplot(df_long, aes(x = Land, y = Anzahl, fill = Medaille)) +
 
 #3
 #Abhängigkeit zwischen der Medaillenfarbe und der Sportart für jedes Land         
-
+# Fisher's Exakter Test für jedes Land
+for (land in unique(df$Land)) {
+  subset_data <- subset(df, land == Land)
+  
+  # Erstellen einer Kontingenztafel der Medaillenfarben für jedes Land
+  medaillen_matrix <- xtabs(cbind(NrGold, NrSilber, NrBronze) ~ Sportart, data = subset_data)
+  
+  fisher_test <- fisher.test(medaillen_matrix)
+  
+  print(paste("Fisher's Exakter Test für Land:", land))
+  print(fisher_test)
+}
