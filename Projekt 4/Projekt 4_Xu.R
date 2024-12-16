@@ -2,7 +2,7 @@
 library(vcd)
 library(ggplot2)
 
-#setwd("C:/Users/Hanji/OneDrive/Studium/WS 24-25/Fallstudien/Projekt 4")
+setwd("C:/Users/Hanji/OneDrive/Studium/WS 24-25/Fallstudien/Projekt 4")
 
 df = read.csv2("Medaillen.csv", header = TRUE)
 
@@ -135,7 +135,7 @@ print(fisher_test)
 
 #Aufgabe 2
 
-sportarten <- unique(df$Sportart)  # Alle einzigartigen Sportarten
+sportarten <- c("Ballsportart", "Kampfsport", "Leichtathletik", "Schwimmen")
 
 # Kontingenztafel erstellen
 table_pro_Sportart <- xtabs(Anzahl ~ Medaille + Land + Sportart, data = df_long)
