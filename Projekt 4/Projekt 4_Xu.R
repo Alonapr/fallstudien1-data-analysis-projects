@@ -2,7 +2,7 @@
 library(vcd)
 library(ggplot2)
 
-#setwd("C:/Users/Hanji/OneDrive/Studium/WS 24-25/Fallstudien/Projekt 4")
+setwd("C:/Users/Hanji/OneDrive/Studium/WS 24-25/Fallstudien/Projekt 4")
 
 df = read.csv2("Medaillen.csv", header = TRUE)
 
@@ -57,6 +57,24 @@ print(medaillen_gesamt)
 
 
 #Grafische Darstellung
+
+# Barplot erstellen
+ggplot(df, aes(x = Land, y = Total, fill = Sportart)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(
+    #title = "Gesamtanzahl der Medaillen pro Land und Sportart",
+    x = "Land",
+    y = "Gesamtanzahl der Medaillen"
+  ) +
+  theme(
+    axis.title.x = element_text(size = 14), # X-Achsentitel vergrößern
+    axis.title.y = element_text(size = 14), # Y-Achsentitel vergrößern
+    axis.text.x = element_text(size = 12),  # X-Achsentext vergrößern
+    axis.text.y = element_text(size = 12),  # Y-Achsentext vergrößern
+    legend.title = element_text(size = 14), # Legendentitel vergrößern
+    legend.text = element_text(size = 12)   # Legendentext vergrößern
+  )
+
 
 # Medaillen-Daten umstrukturieren
 df_long <- data.frame(
@@ -198,13 +216,28 @@ for (i in 1:4) {
   )
 }
 
-# Ergebnisse anzeigen
+p_values_A2 = numeric(4)
+
+# Ergebnisse anzeigen und p-Werte speichern
 for (i in 1:4) {
   cat("\nSportart:", sportarten[i], "\n")
   print(results[[sportarten[i]]]$Tabelle)
   print(results[[sportarten[i]]]$Test)
+  p_values_A2[i] = results[[sportarten[i]]]$Test$p.value
 }
 
+print(p_values_A2)
+# 0.02756028 0.29974928 0.53481710 0.25489817
+
+p_values_A2 < 0.05
+# TRUE FALSE FALSE FALSE
+
+adjusted_p_values_A2 <- p.adjust(p_values_A2, method = "holm")
+print(adjusted_p_values_A2)
+# 0.1102411 0.7646945 0.7646945 0.7646945
+
+adjusted_p_values_A2 < 0.05
+# FALSE FALSE FALSE FALSE
 
 #Aufgabe 3
 
@@ -279,9 +312,31 @@ for (i in 1:5) {
   )
 }
 
-# Ergebnisse anzeigen
+p_values_A3 = numeric(5)
+
+# Ergebnisse anzeigen  und p-Werte Speichern
 for (i in 1:5) {
   cat("\nLand:", land[i], "\n")
   print(results[[land[i]]]$Tabelle)
   print(results[[land[i]]]$Test)
+  p_values_A3[i] = results[[land[i]]]$Test$p.value
 }
+
+print(p_values_A3)
+# 0.18370572 0.23344587 0.04941841 0.34310820 0.03665538
+
+p_values_A3 < 0.05
+# FALSE FALSE  TRUE FALSE  TRUE
+
+adjusted_p_values_A3 <- p.adjust(p_values_A3, method = "holm")
+print(adjusted_p_values_A3)
+# 0.5511171 0.5511171 0.1976736 0.5511171 0.1832769
+
+adjusted_p_values_A3 < 0.05
+# FALSE FALSE FALSE FALSE FALSE
+
+
+#To do: 
+#Keine Maßzahlen, aber alle Kontingenztafeln. Barplot sinnvoll.
+#Fisher-Test auf 2x2 beschreiben, aber erwähnen, dass in R für kxl Kontingenztafeln
+#anders macht. ("Mehta")
