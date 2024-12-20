@@ -1,5 +1,4 @@
 # Bibliotheken laden
-library(vcd)
 library(ggplot2)
 
 setwd("C:/Users/Hanji/OneDrive/Studium/WS 24-25/Fallstudien/Projekt 4")
