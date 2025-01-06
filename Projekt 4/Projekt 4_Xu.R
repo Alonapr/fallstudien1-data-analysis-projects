@@ -1,7 +1,7 @@
 # Bibliotheken laden
 library(ggplot2)
 
-setwd("C:/Users/Hanji/OneDrive/Studium/WS 24-25/Fallstudien/Projekt 4")
+#setwd("C:/Users/Hanji/OneDrive/Studium/WS 24-25/Fallstudien/Projekt 4")
 
 df = read.csv2("Medaillen.csv", header = TRUE)
 
@@ -83,40 +83,30 @@ df_long <- data.frame(
   Anzahl = c(df$NrGold, df$NrSilber, df$NrBronze)
 )
 
-# Überprüfen der Struktur der Daten
-head(df_long)
+# Medaillenverteilung nach Land und Sportart
+df_long$Medaille <- factor(df_long$Medaille, levels = c("Gold", "Silber", "Bronze"))
 
-# Daten aufbereiten: Aggregation nach Land, Medaillentyp und Sportart
-df_stacked <- aggregate(Anzahl ~ Land + Medaille, data = df_long, sum)
-
-# Gestapeltes Balkendiagramm
-# Reihenfolge der Medaillentypen anpassen
-df_stacked$Medaille <- factor(df_stacked$Medaille, levels = c("Bronze", "Silber", "Gold"))
-
-# Diagramm mit neuer Reihenfolge
-ggplot(df_stacked, aes(x = Land, y = Anzahl, fill = Medaille)) +
-  geom_bar(stat = "identity") +
-  labs(title = "Medaillenverteilung nach Ländern und Medaillentypen",
-       x = "Land", y = "Anzahl Medaillen") +
-  scale_fill_manual(values = c("Gold" = "gold", "Silber" = "gray", "Bronze" = "brown")) +
-  theme_minimal()
-
-
-#------
-# Daten aufbereiten
-df_facet <- aggregate(Anzahl ~ Land + Sportart + Medaille, data = df_long, sum)
-
-# Reihenfolge der Medaillentypen anpassen
-df_facet$Medaille <- factor(df_stacked$Medaille, levels = c("Bronze", "Silber", "Gold"))
-
-# Facetiertes Balkendiagramm
-ggplot(df_facet, aes(x = Medaille, y = Anzahl, fill = Medaille)) +
-  geom_bar(stat = "identity") +
-  facet_wrap(~ Sportart) +
-  labs(title = "Medaillenverteilung nach Sportarten",
-       x = "Medaille", y = "Anzahl Medaillen") +
-  scale_fill_manual(values = c("Gold" = "gold", "Silber" = "gray", "Bronze" = "brown")) +
-  theme_minimal()
+ggplot(df_long, aes(x = Land, y = Anzahl, fill = Medaille)) +
+  geom_bar(position = "dodge", stat = "identity", color = "black") +
+  facet_wrap(~ Sportart, scales = "free_x", nrow = 2) +
+  scale_fill_manual(values = c("Gold" = "gold", "Silber" = "#C0C0C0", "Bronze" = "#CD7F32")) +
+  theme_minimal() +
+  theme(
+    panel.grid.major.y = element_line(color = "grey80"),
+    panel.grid.minor.y = element_line(color = "grey90", linetype = "dashed"),
+    panel.border = element_rect(color = "black", fill = NA),
+    legend.key = element_rect(fill = "white", color = "black"),
+    legend.background = element_rect(color = "black"),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 12),
+    axis.text.y = element_text(size = 12),
+    axis.title.x = element_text(size = 18),
+    axis.title.y = element_text(size = 18),
+    strip.text = element_text(size = 14),
+    legend.text = element_text(size = 12),
+    legend.title = element_text(size = 14)
+  ) +
+  scale_y_continuous(breaks = seq(0, 15, by = 2)) +
+  labs(x = "Land", y = "Anzahl Medaillen", fill = "Medaille")
 
 
 #Aufgabe 1
