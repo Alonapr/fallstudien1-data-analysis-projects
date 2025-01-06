@@ -10,15 +10,6 @@ summary(df)
 
 attach(df)
 #Deskriptive Analyse
-par(mar = c(4.2, 4, 1, 1), mfrow = c(2, 2))
-barplot(table(NrGold), main = "", ylab = "Anzahl", xlab = "NrGold", 
-        cex.axis = 1.1, cex.lab = 1.3) 
-barplot(table(NrSilber), main = "", ylab = "Anzahl", xlab = "NrSilber",
-        cex.axis = 1.1, cex.lab = 1.3)
-barplot(table(NrBronze), main = "", ylab = "Anzahl", xlab = "NrBronze",
-        cex.axis = 1.1, cex.lab = 1.3)
-barplot(table(Total), main = "", ylab = "Anzahl", xlab = "Total",
-        cex.axis = 1.1, cex.lab = 1.3)
 
 #1
 # Abhängigkeit zwischen dem Land und der Sportart bezüglich der Gesamtanzahl an Medaillen
@@ -68,12 +59,31 @@ df_long <- data.frame(
 )
 
 # Medaillenverteilung nach Land und Sportart
+df_long$Medaille <- factor(df_long$Medaille, levels = c("Gold", "Silber", "Bronze"))
+
 ggplot(df_long, aes(x = Land, y = Anzahl, fill = Medaille)) +
-  geom_bar(position = "stack", stat = "identity") +
-  facet_wrap(~ Sportart) +
-  scale_fill_manual(values = c("Gold" = "gold", "Silber" = "#C0C0C0", "Bronze" = "#CD7F32")) + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  geom_bar(position = "dodge", stat = "identity", color = "black") +
+  facet_wrap(~ Sportart, scales = "free_x", nrow = 2) +
+  scale_fill_manual(values = c("Gold" = "gold", "Silber" = "#C0C0C0", "Bronze" = "#CD7F32")) +
+  theme_minimal() +
+  theme(
+    panel.grid.major.y = element_line(color = "grey80"),
+    panel.grid.minor.y = element_line(color = "grey90", linetype = "dashed"),
+    panel.border = element_rect(color = "black", fill = NA),
+    legend.key = element_rect(fill = "white", color = "black"),
+    legend.background = element_rect(color = "black"),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 12),
+    axis.text.y = element_text(size = 12),
+    axis.title.x = element_text(size = 14),
+    axis.title.y = element_text(size = 14),
+    strip.text = element_text(size = 14),
+    legend.text = element_text(size = 12),
+    legend.title = element_text(size = 14)
+  ) +
+  scale_y_continuous(breaks = seq(0, 15, by = 2)) +
   labs(x = "Land", y = "Anzahl Medaillen", fill = "Medaille")
+
+
 
 #3
 # Abhängigkeit zwischen der Medaillenfarbe und der Sportart für jedes Land         
