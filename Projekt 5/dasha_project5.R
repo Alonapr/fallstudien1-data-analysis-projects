@@ -7,8 +7,6 @@ anyNA(data)
 summary(data)
 str(data)
 
-data <- data[, -1]
-
 # Aufgabe 1
 
 # In numerischen Datentyp einige Spalten umwandeln
