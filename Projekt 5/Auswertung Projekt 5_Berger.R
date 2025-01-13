@@ -10,50 +10,50 @@
 #setwd("C:/Studium/Fallstudien I/Projekt 5")
 df <- read.csv("US_election_2024.csv", header = TRUE, sep = ";", dec = ",")
 summary(df)
-attach(df)
 
 # Levels anpassen und Deskription
-State <- as.factor(State)
-print(State)
+df$State <- as.factor(df$State)
+print(df$State)
 
-Leading_Candidate <- as.factor(Leading_Candidate)
-print(Leading_Candidate)
-table(Leading_Candidate)
+df$Leading_Candidate <- as.factor(df$Leading_Candidate)
+levels(df$Leading_Candidate) <- c(0, 1)
+print(df$Leading_Candidate)
+table(df$Leading_Candidate)
 
-Total_Area <- log(Total_Area)
-print(Total_Area)
-hist(Total_Area)
+df$Total_Area <- log(df$Total_Area)
+print(df$Total_Area)
+hist(df$Total_Area)
 
-Population <- log(Population)
-print(Population)
-hist(Population)
+df$Population <- log(df$Population)
+print(df$Population)
+hist(df$Population)
 
-Population_Density <- log(Population_Density)
-print(Population_Density)
-hist(Population_Density)
+df$Population_Density <- log(df$Population_Density)
+print(df$Population_Density)
+hist(df$Population_Density)
 
-print(Median_Age)
-hist(Median_Age)
+print(df$Median_Age)
+hist(df$Median_Age)
 
-print(Birth_Rate)
-hist(Birth_Rate)
+print(df$Birth_Rate)
+hist(df$Birth_Rate)
 
-print(HDI)
-hist(HDI)
+print(df$HDI)
+hist(df$HDI)
 
-print(Unemployment_Rate)
-hist(Unemployment_Rate)
+print(df$Unemployment_Rate)
+hist(df$Unemployment_Rate)
 
-print(Health_Insurance_Coverage)
-hist(Health_Insurance_Coverage)
+print(df$Health_Insurance_Coverage)
+hist(df$Health_Insurance_Coverage)
 
-print(Median_Rent)
-hist(Median_Rent)
+print(df$Median_Rent)
+hist(df$Median_Rent)
 
 ################################################################################
 
-Modell <- glm(Leading_Candidate ~ Total_Area + Population + Population_Density
-   + Median_Age + Birth_Rate + HDI + Unemployment_Rate + Median_Rent,
+Modell <- glm(df$Leading_Candidate ~ df$Total_Area + df$Population
+   + df$Median_Age + df$Birth_Rate + df$HDI + df$Unemployment_Rate + df$Median_Rent,
    family = binomial)
 plot(Modell)
 
