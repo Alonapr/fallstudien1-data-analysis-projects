@@ -1,3 +1,7 @@
+library(glmnet)
+library(caret)
+set.seed(42)
+
 # Daten laden
 data <- read.csv("US_election_2024.csv", sep = ";")
 
@@ -8,6 +12,9 @@ summary(data)
 str(data)
 
 # Aufgabe 1
+
+# Die Spalte "state" löschen
+data <- data[, -1]
 
 # In numerischen Datentyp einige Spalten umwandeln
 data$Population_Density <- as.numeric(gsub(",", ".", data$Population_Density))
@@ -23,9 +30,6 @@ data$Leading_Candidate <- as.factor(data$Leading_Candidate)
 # muss die Zielvariable numerisch sein und als 0 und 1 kodiert werden)
 levels(data$Leading_Candidate) <- c(0, 1)  
 
-# Prädiktoren und Zielvariable trennen
-X <- model.matrix(Leading_Candidate ~ . - 1, data = data) 
-y <- as.numeric(data$Leading_Candidate)
-
-
-
+# Erstellen des Models
+model <- glm(Leading_Candidate ~ ., data = data, family = binomial)
+summary(model)
