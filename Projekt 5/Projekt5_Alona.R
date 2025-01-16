@@ -60,24 +60,68 @@ barplot(table(Birth_Rate), main = "", ylab = "Anzahl", xlab = "Birth_Rate",
 # muss die Zielvariable numerisch sein und als 0 und 1 kodiert werden)
 df$Leading_Candidate <- ifelse(df$Leading_Candidate == "Harris", 0, 1)
 
-glm_model <- glm(Leading_Candidate ~ Total_Area + Population + Population_Density + 
-                    Median_Age + Birth_Rate + HDI + Unemployment_Rate + 
-                    Health_Insurance_Coverage + 
-                    Median_Rent, family = binomial, data = df)
+df$Total_Area <- log(df$Total_Area)
+print(df$Total_Area)
+hist(df$Total_Area)
+
+df$Population <- log(df$Population)
+print(df$Population)
+hist(df$Population)
+
+df$Population_Density <- log(df$Population_Density)
+print(df$Population_Density)
+hist(df$Population_Density)
+
+glm_model <- glm(Leading_Candidate ~ Total_Area + Population + 
+                 + Median_Age + Birth_Rate + HDI + Unemployment_Rate + Health_Insurance_Coverage
+                 + Median_Rent, family = binomial, data = df)
 summary(glm_model)
+plot(glm_model)
+
+#Aufgabe 2 
+
+# Schrittweise Selektion basierend auf AIC
+stepwise_model <- step(glm_model, direction = "both", trace = 0)
+
+# Zusammenfassung des reduzierten Modells
+summary(stepwise_model)
+plot(stepwise_model)
+
+# Konfidenzintervalle der Koeffizienten
+confint(stepwise_model)
+
+# Schrittweise Selektion basierend auf BIC
+n <- nrow(df)  # Anzahl der Datenpunkte
+stepwise_model_bic <- step(glm_model, direction = "both", k = log(n), trace = 0)
+
+# Zusammenfassung des BIC-Modells
+summary(stepwise_model_bic)
+plot(stepwise_model_bic)
+
+# Konfidenzintervalle der Koeffizienten
+confint(stepwise_model_bic)
 
 #Aufgabe 3 - Modellenbewertung
 # Vorhersagen für das Modell generieren
-pred_prob <- predict(glm_model, type = "response")
 
-# Manuell die Levels und die Richtung festlegen
-roc_curve <- roc(df$Leading_Candidate, pred_prob, levels = c(0, 1), direction = "<")
+pred_prob1 <- predict(glm_model, type = "response")
+pred_prob2 <- predict(stepwise_model, type = "response")
 
-# ROC-Kurve plotten
-plot(roc_curve, col = "blue", main = "ROC Curve")
+# ROC-Kurve berechnen
+roc_curve1 <- roc(df$Leading_Candidate, pred_prob1)
+roc_curve2 <- roc(df$Leading_Candidate, pred_prob2)
 
 # AUC berechnen und ausgeben
-auc(roc_curve)
+auc1 <- auc(roc_curve1)
+auc2 <- auc(roc_curve2)
+print(paste("AUC:", auc1, auc2))
+
+plot(roc_curve1, col = "blue", lwd = 2)
+lines(roc_curve2, col = "red", lwd = 2)
+legend("bottomright", legend = c(paste("Modell 1 (AUC =", round(auc1, 2), ")"),
+                                 paste("Modell 2 (AUC =", round(auc2, 2), ")")),
+       col = c("blue", "red"), lwd = 2)
+
 
 
 # TrainControl für Kreuzvalidierung mit ROC und AUC
@@ -86,28 +130,17 @@ train_control <- trainControl(method = "cv",
                               classProbs = TRUE,     # Berechnung von Klassenwahrscheinlichkeiten
                               summaryFunction = twoClassSummary)  # Berechnung von ROC und AUC
 
-# Das Modell trainieren (binomiale logistische Regression)
-cv_model <- train(Leading_Candidate ~ Total_Area + Population + Population_Density + 
-                    Median_Age + Birth_Rate + HDI + Unemployment_Rate + 
-                    Health_Insurance_Coverage + Median_Rent, 
-                  data = df, 
-                  method = "glm", 
-                  family = "binomial", 
-                  trControl = train_control, 
-                  metric = "ROC")  # ROC als Leistungsmaß
 
-# Zusammenfassung der Ergebnisse der Kreuzvalidierung
-print(cv_model)
+# Kreuzvalidierung für das erste Modell (Originalmodell)
+cv_model1 <- train(Leading_Candidate ~ Total_Area + Population + Population_Density + 
+                     Median_Age + Birth_Rate + HDI + Unemployment_Rate + 
+                     Health_Insurance_Coverage + Median_Rent, 
+                   data = df, 
+                   method = "glm", 
+                   family = "binomial", 
+                   trControl = train_control, 
+                   metric = "ROC")
 
-# ROC-Kurve berechnen und plotten
-pred_prob <- predict(cv_model, df, type = "prob")[,2]  # Wahrscheinlichkeiten für Klasse 1 (Trump)
-roc_curve <- roc(df$Leading_Candidate, pred_prob)
 
-# Plot der ROC-Kurve
-plot(roc_curve, col = "blue", main = "ROC Curve")
-
-# AUC berechnen und anzeigen
-auc_value <- auc(roc_curve)
-print(paste("AUC:", auc_value))
 
 
