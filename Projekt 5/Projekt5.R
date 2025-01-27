@@ -1,3 +1,8 @@
+# Laden der notwendigen Pakete
+library(pROC) # ROC-Kurvenanalyse und AUC-Berechnung
+library(caret) # Kreuzvalidierung und Vergleich von Modellen
+
+
 df <- read.csv("US_election_2024.csv", sep = ";", dec = ",")
 head(df)
 str(df)
@@ -150,62 +155,75 @@ cat("AIC des reduzierten Modells:", AIC(Modell_reduziert), "\n")
 ###############################################################################
 #Aufgabe 3
 
-# Installation und Laden der notwendigen Pakete
-library(pROC) # ROC-Kurvenanalyse und AUC-Berechnung
-library(caret) # Kreuzvalidierung und Vergleich von Modellen
+# Alle erklärenden Variablen
+formula_full <- Leading_Candidate ~ Total_Area + Population +
+  Median_Age + Birth_Rate + HDI + Unemployment_Rate +
+  Median_Rent + Health_Insurance_Coverage
 
-# ROC-Kurve und AUC für das vollständige Modell
-pred_full <- predict(Modell_voll, type = "response")
-roc_full <- roc(df$Leading_Candidate, pred_full)
-auc_full <- auc(roc_full)
+# Reduziertes Modell (basierend auf stepwise AIC)
+formula_reduced <- Leading_Candidate ~ Population + Median_Age +
+  Unemployment_Rate + Median_Rent + Health_Insurance_Coverage
 
-# ROC-Kurve und AUC für das reduzierte Modell
-pred_reduced <- predict(Modell_reduziert, type = "response")
-roc_reduced <- roc(df$Leading_Candidate, pred_reduced)
-auc_reduced <- auc(roc_reduced)
-
-# ROC-Kurven plotten
-plot(roc_full, col = "blue", main = "ROC-Kurve: Vollständig vs. Reduziert")
-lines(roc_reduced, col = "red")
-legend("bottomright", legend = c("Vollständiges Modell", "Reduziertes Modell"),
-       col = c("blue", "red"), lwd = 2)
-
-# AUC-Werte ausgeben
-cat("AUC des vollständigen Modells:", auc_full, "\n")
-cat("AUC des reduzierten Modells:", auc_reduced, "\n")
-
-# Kreuzvalidierung für das vollständige Modell
-set.seed(123)
-train_control <- trainControl(
-  method = "cv",
+#10-fache Kreuzvalidierung
+set.seed(123456)
+ctrl <- trainControl(
+  method = "cv",            # k-Fold CV
   number = 10,
-  classProbs = TRUE,
-  summaryFunction = twoClassSummary
+  classProbs = TRUE,        # damit caret Probability Estimates zurückgibt
+  summaryFunction = twoClassSummary,  # AUC, Sens, Spez ...
+  savePredictions = "final" # Vorhersagen speichern für eigenes ROC-Plotting
 )
 
+# Faktor-Level anpassen, damit caret "positiv" / "negativ" versteht
+# Zum Beispiel: Level 1 = "Trump", Level 0 = "Harris"
+levels(df$Leading_Candidate) <- c("Harris", "Trump")
+
+# 1. Vollständiges Modell
 model_full_cv <- train(
-  Leading_Candidate ~ Total_Area + Population +
-    Median_Age + Birth_Rate + HDI + Unemployment_Rate +
-    Median_Rent + Health_Insurance_Coverage,
-  data = df,
-  method = "glm",
-  family = "binomial",
-  trControl = train_control,
-  metric = "ROC"
+  formula_full,
+  data       = df,
+  method     = "glm",
+  family     = "binomial",
+  metric     = "ROC",   # Maximiert AUC (ROC) statt Accuracy
+  trControl  = ctrl
 )
 
-# Kreuzvalidierung für das reduzierte Modell
-model_reduced_cv <- train(
-  Leading_Candidate ~ Population + Median_Age + Unemployment_Rate +
-    Median_Rent + Health_Insurance_Coverage,
-  data = df,
-  method = "glm",
-  family = "binomial",
-  trControl = train_control,
-  metric = "ROC"
+# 2. Reduziertes Modell
+model_red_cv <- train(
+  formula_reduced,
+  data       = df,
+  method     = "glm",
+  family     = "binomial",
+  metric     = "ROC",
+  trControl  = ctrl
 )
 
-# Kreuzvalidierungs-ROC-Werte
-cat("Kreuzvalidierungs-ROC des vollständigen Modells:", max(model_full_cv$results$ROC), "\n")
-cat("Kreuzvalidierungs-ROC des reduzierten Modells:", max(model_reduced_cv$results$ROC), "\n")
+# Trainingsresultate ansehen
+model_full_cv
+model_red_cv
+
+# Beispiel:
+preds_full <- model_full_cv$pred
+head(preds_full)
+# Hier stehen die Spalten "obs" (wahre Klasse), "Trump" (Vorhersage-WK für Trump)
+# und "Harris" (Vorhersage-WK für Harris). 
+
+roc_full <- roc(response = preds_full$obs,
+                predictor = preds_full$Trump,
+                levels    = c("Harris","Trump"))
+
+plot(roc_full, col="blue", main="ROC-Kurven (caret)")
+
+# Dasselbe für das reduzierte Modell
+preds_red <- model_red_cv$pred
+roc_red   <- roc(response = preds_red$obs,
+                 predictor = preds_red$Trump,
+                 levels    = c("Harris","Trump"))
+lines(roc_red, col="red")
+legend("bottomright", legend=c("Full","Reduced"), col=c("blue","red"), lwd=2)
+
+auc(roc_full)
+# Area under the curve für das vollständige Modell: 0.8468
+auc(roc_red)
+# Area under the curve für das reduzierte Modell: 0.9306
 

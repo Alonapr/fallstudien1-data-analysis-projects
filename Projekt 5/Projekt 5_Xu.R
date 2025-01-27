@@ -1,14 +1,53 @@
+# Laden der notwendigen Pakete
+library(pROC) # ROC-Kurvenanalyse und AUC-Berechnung
+library(caret) # Kreuzvalidierung und Vergleich von Modellen
+
 setwd("C:/Users/Hanji/OneDrive/Studium/WS 24-25/Fallstudien/Projekt 5")
-df <- read.csv("US_election_2024.csv", header = TRUE, sep = ";", dec = ",")
+df <- read.csv("US_election_2024.csv", sep = ";", dec = ",")
+head(df)
+str(df)
+
+dim(df)
+#51 11
+
+summary(df)
+#keine NA Werte
+
+#Deskriptive Analyse
+
+table(df$State)
+#Eine Beobachung aus jedem Staat
+
+table(df$Leading_Candidate)
+# Harris  Trump 
+# 20     31 
+
+#Statistische Kennwerte für kardinal stetig skalierte Variablen
+num_stat <- function(data) {
+  var_name <- variable.names(df[3:10])
+  result <- matrix(NA, nrow = length(data), ncol = 8)
+  colnames(result) <- c("Merkmal", "min", "q0.25", "q0.5", 
+                        "Arith. Mittel", "q0.75", "max", "sd")
+  for(i in 1:length(data)) {
+    var_data <- data[[i]]
+    
+    q1 <- quantile(var_data, 0.25, type = 2)
+    q3 <- quantile(var_data, 0.75, type = 2)
+    
+    result[i, 1] <- var_name[i]
+    result[i, 2] <- sprintf("%.3f", min(var_data))
+    result[i, 3] <- sprintf("%.3f", q1)
+    result[i, 4] <- sprintf("%.3f", median(var_data))
+    result[i, 5] <- sprintf("%.3f", mean(var_data))
+    result[i, 6] <- sprintf("%.3f", q3)
+    result[i, 7] <- sprintf("%.3f", max(var_data))
+    result[i, 8] <- sprintf("%.3f", sd(var_data))
+  } 
+  return(as.data.frame(result))
+}
+num_stat(df[,3:10])
 
 # Datenaufbereitung
-df$State <- as.factor(df$State)
-
-df$Leading_Candidate <- as.factor(df$Leading_Candidate)
-levels(df$Leading_Candidate) <- c("Harris", "Trump")
-print(df$Leading_Candidate)
-table(df$Leading_Candidate)
-
 df$Total_Area <- log(df$Total_Area)
 print(df$Total_Area)
 hist(df$Total_Area)
@@ -18,16 +57,24 @@ print(df$Population)
 hist(df$Population)
 
 df$Population_Density <- log(df$Population_Density)
+print(df$Population_Density)
+hist(df$Population_Density)
 
 ################################################################################
-# Aufgabe 1
+
+# Aufgabe 1 - die Zielvariable Leading_Candidate modellieren
+# Harris = 0, Trump = 1 kodieren (da wir Logistische Regression verwenden, 
+# muss die Zielvariable numerisch sein und als 0 und 1 kodiert werden)
+df$Leading_Candidate <- ifelse(df$Leading_Candidate == "Harris", 0, 1)
+df$Leading_Candidate <- as.factor(df$Leading_Candidate)
+
 # Logistische Regression
-Modell <- glm(df$Leading_Candidate ~ df$Total_Area + df$Population
-              + df$Median_Age + df$Birth_Rate + df$HDI + df$Unemployment_Rate + df$Median_Rent
-              + df$Health_Insurance_Coverage, family = binomial)
+Modell_voll <- glm(df$Leading_Candidate ~ df$Total_Area + df$Population
+                   + df$Median_Age + df$Birth_Rate + df$HDI + df$Unemployment_Rate + df$Median_Rent
+                   + df$Health_Insurance_Coverage, family = binomial)
 
 # Ergebnisse anzeigen
-summary(Modell)
+summary(Modell_voll)
 
 # Call:
 #   glm(formula = df$Leading_Candidate ~ df$Total_Area + df$Population + 
@@ -58,10 +105,6 @@ summary(Modell)
 # Aufgabe 2
 
 # Schrittweise Selektion basierend auf AIC
-Modell_voll <- glm(df$Leading_Candidate ~ df$Total_Area + df$Population
-                   + df$Median_Age + df$Birth_Rate + df$HDI + df$Unemployment_Rate + df$Median_Rent
-                   + df$Health_Insurance_Coverage, family = binomial)
-
 # Durchführung der Schrittweisen Selektion (beide Richtungen)
 Modell_reduziert <- step(Modell_voll, direction = "both", trace = 0)
 
@@ -76,11 +119,11 @@ summary(Modell_reduziert)
 # Coefficients:
 #   Estimate Std. Error z value Pr(>|z|)   
 # (Intercept)                   1.431e+02  5.250e+01   2.725  0.00642 **
-#   df$Population                 1.672e+00  9.192e-01   1.819  0.06887 . 
+# df$Population                 1.672e+00  9.192e-01   1.819  0.06887 . 
 # df$Median_Age                -3.783e-01  2.961e-01  -1.278  0.20129   
 # df$Unemployment_Rate         -1.818e+02  1.274e+02  -1.427  0.15345   
 # df$Median_Rent               -1.163e-02  4.348e-03  -2.676  0.00745 **
-#   df$Health_Insurance_Coverage -1.404e+02  5.540e+01  -2.534  0.01126 * 
+# df$Health_Insurance_Coverage -1.404e+02  5.540e+01  -2.534  0.01126 * 
 #   ---
 #   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 # 
@@ -92,6 +135,16 @@ summary(Modell_reduziert)
 # 
 # Number of Fisher Scoring iterations: 8
 
+# Konfidenzintervalle der Koeffizienten
+confint.default(Modell_reduziert)
+#                                       2.5 %        97.5 %
+#  (Intercept)                    40.18578546 245.969897615
+#  df$Population                  -0.12929658   3.473717303
+#  df$Median_Age                  -0.95863441   0.201945736
+#  df$Unemployment_Rate         -431.53963693  67.841629156
+#  df$Median_Rent                 -0.02015508  -0.003113086
+#  df$Health_Insurance_Coverage -248.97290664 -31.820859017
+
 # Vergleich der Modelle anhand von AIC
 cat("AIC des vollständigen Modells:", AIC(Modell_voll), "\n")
 # AIC des vollständigen Modells: 34.19821 
@@ -102,61 +155,78 @@ cat("AIC des reduzierten Modells:", AIC(Modell_reduziert), "\n")
 ###############################################################################
 #Aufgabe 3
 
-# Installation und Laden der notwendigen Pakete
-library(pROC) # ROC-Kurvenanalyse und AUC-Berechnung
-library(caret) # Kreuzvalidierung und Vergleich von Modellen
+# Alle erklärenden Variablen
+formula_full <- Leading_Candidate ~ Total_Area + Population +
+  Median_Age + Birth_Rate + HDI + Unemployment_Rate +
+  Median_Rent + Health_Insurance_Coverage
 
-# ROC-Kurve und AUC für das vollständige Modell
-pred_full <- predict(Modell_voll, type = "response")
-roc_full <- roc(df$Leading_Candidate, pred_full)
-auc_full <- auc(roc_full)
+# Reduziertes Modell (basierend auf stepwise AIC)
+formula_reduced <- Leading_Candidate ~ Population + Median_Age +
+  Unemployment_Rate + Median_Rent + Health_Insurance_Coverage
 
-# ROC-Kurve und AUC für das reduzierte Modell
-pred_reduced <- predict(Modell_reduziert, type = "response")
-roc_reduced <- roc(df$Leading_Candidate, pred_reduced)
-auc_reduced <- auc(roc_reduced)
-
-# ROC-Kurven plotten
-plot(roc_full, col = "blue", main = "ROC-Kurve: Vollständig vs. Reduziert")
-lines(roc_reduced, col = "red")
-legend("bottomright", legend = c("Vollständiges Modell", "Reduziertes Modell"),
-       col = c("blue", "red"), lwd = 2)
-
-# AUC-Werte ausgeben
-cat("AUC des vollständigen Modells:", auc_full, "\n")
-cat("AUC des reduzierten Modells:", auc_reduced, "\n")
-
-# Kreuzvalidierung für das vollständige Modell
-set.seed(123)
-train_control <- trainControl(
-  method = "cv",
+#10-fache Kreuzvalidierung
+set.seed(123456)
+ctrl <- trainControl(
+  method = "cv",            # k-Fold CV
   number = 10,
-  classProbs = TRUE,
-  summaryFunction = twoClassSummary
+  classProbs = TRUE,        # damit caret Probability Estimates zurückgibt
+  summaryFunction = twoClassSummary,  # AUC, Sens, Spez ...
+  savePredictions = "final" # Vorhersagen speichern für eigenes ROC-Plotting
 )
 
+# Faktor-Level anpassen, damit caret "positiv" / "negativ" versteht
+# Zum Beispiel: Level 1 = "Trump", Level 0 = "Harris"
+df$Leading_Candidate <- as.factor(df$Leading_Candidate)
+levels(df$Leading_Candidate) <- c("Harris", "Trump")
+
+# 1. Vollständiges Modell
 model_full_cv <- train(
-  Leading_Candidate ~ Total_Area + Population +
-    Median_Age + Birth_Rate + HDI + Unemployment_Rate +
-    Median_Rent + Health_Insurance_Coverage,
-  data = df,
-  method = "glm",
-  family = "binomial",
-  trControl = train_control,
-  metric = "ROC"
+  formula_full,
+  data       = df,
+  method     = "glm",
+  family     = "binomial",
+  metric     = "ROC",   # Maximiert AUC (ROC) statt Accuracy
+  trControl  = ctrl
 )
 
-# Kreuzvalidierung für das reduzierte Modell
-model_reduced_cv <- train(
-  Leading_Candidate ~ Population + Median_Age + Unemployment_Rate +
-    Median_Rent + Health_Insurance_Coverage,
-  data = df,
-  method = "glm",
-  family = "binomial",
-  trControl = train_control,
-  metric = "ROC"
+# 2. Reduziertes Modell
+model_red_cv <- train(
+  formula_reduced,
+  data       = df,
+  method     = "glm",
+  family     = "binomial",
+  metric     = "ROC",
+  trControl  = ctrl
 )
 
-# Kreuzvalidierungs-ROC-Werte
-cat("Kreuzvalidierungs-ROC des vollständigen Modells:", max(model_full_cv$results$ROC), "\n")
-cat("Kreuzvalidierungs-ROC des reduzierten Modells:", max(model_reduced_cv$results$ROC), "\n")
+# Trainingsresultate ansehen (AUC aus der CV, Kappa, Accuracy, usw.)
+model_full_cv
+model_red_cv
+
+# Beispiel:
+preds_full <- model_full_cv$pred
+head(preds_full)
+# Hier stehen die Spalten "obs" (wahre Klasse), "Trump" (Vorhersage-WK für Trump)
+# und "Harris" (Vorhersage-WK für Harris). 
+# Beachten Sie, dass caret ggf. intern die Levels sortiert: 
+# Positiv = Trump, Negativ = Harris.
+
+roc_full <- roc(response = preds_full$obs,
+                predictor = preds_full$Trump,
+                levels    = c("Harris","Trump"))
+
+plot(roc_full, col="blue", main="ROC-Kurven (caret)")
+
+# Dasselbe für das reduzierte Modell
+preds_red <- model_red_cv$pred
+roc_red   <- roc(response = preds_red$obs,
+                 predictor = preds_red$Trump,
+                 levels    = c("Harris","Trump"))
+lines(roc_red, col="red")
+legend("bottomright", legend=c("Full","Reduced"), col=c("blue","red"), lwd=2)
+
+auc(roc_full)
+# Area under the curve: 0.8468
+auc(roc_red)
+# Area under the curve: 0.9306
+
