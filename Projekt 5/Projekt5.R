@@ -21,8 +21,7 @@ table(df$Leading_Candidate)
 
 #Statistische Kennwerte für kardinal stetig skalierte Variablen
 num_stat <- function(data) {
-  var_name <- c("Population_Density", "Median_Age", "HDI", "Unemployment_Rate", 
-                "Health_Insurance_Coverage")
+  var_name <- variable.names(df[3:10])
   result <- matrix(NA, nrow = length(data), ncol = 8)
   colnames(result) <- c("Merkmal", "min", "q0.25", "q0.5", 
                         "Arith. Mittel", "q0.75", "max", "sd")
@@ -43,7 +42,7 @@ num_stat <- function(data) {
   } 
   return(as.data.frame(result))
 }
-num_stat(df[,c(5, 6, 8:10)])
+num_stat(df[,3:10])
 
 # Datenaufbereitung
 df$Total_Area <- log(df$Total_Area)
