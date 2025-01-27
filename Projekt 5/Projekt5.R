@@ -13,8 +13,6 @@ summary(df)
 table(df$State)
 #Eine Beobachung aus jedem Staat
 
-df$Leading_Candidate <- as.factor(df$Leading_Candidate)
-levels(df$Leading_Candidate) <- c("Harris", "Trump")
 table(df$Leading_Candidate)
 # Harris  Trump 
 # 20     31 
@@ -60,6 +58,9 @@ hist(df$Population_Density)
 ################################################################################
 
 # Aufgabe 1 - die Zielvariable Leading_Candidate modellieren
+# Harris = 0, Trump = 1 kodieren (da wir Logistische Regression verwenden, 
+# muss die Zielvariable numerisch sein und als 0 und 1 kodiert werden)
+df$Leading_Candidate <- ifelse(df$Leading_Candidate == "Harris", 0, 1)
 
 # Logistische Regression
 Modell_voll <- glm(df$Leading_Candidate ~ df$Total_Area + df$Population
