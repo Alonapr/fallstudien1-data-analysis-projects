@@ -130,14 +130,14 @@ summary(Modell_reduziert)
 # Number of Fisher Scoring iterations: 8
 
 # Konfidenzintervalle der Koeffizienten
-confint(Modell_reduziert)
+confint.default(Modell_reduziert)
 #                                       2.5 %        97.5 %
-#  (Intercept)                    65.92948970 290.849161255
-#  df$Population                   0.13325740   4.009103982
-#  df$Median_Age                  -1.14789818   0.096095060
-#  df$Unemployment_Rate         -512.34964397  29.679075110
-#  df$Median_Rent                 -0.02404168  -0.005429538
-#  df$Health_Insurance_Coverage -298.64733374 -59.801561990
+#  (Intercept)                    40.18578546 245.969897615
+#  df$Population                  -0.12929658   3.473717303
+#  df$Median_Age                  -0.95863441   0.201945736
+#  df$Unemployment_Rate         -431.53963693  67.841629156
+#  df$Median_Rent                 -0.02015508  -0.003113086
+#  df$Health_Insurance_Coverage -248.97290664 -31.820859017
 
 # Vergleich der Modelle anhand von AIC
 cat("AIC des vollständigen Modells:", AIC(Modell_voll), "\n")
