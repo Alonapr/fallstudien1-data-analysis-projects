@@ -47,18 +47,44 @@ num_stat <- function(data) {
 }
 num_stat(df[,3:10])
 
-# Datenaufbereitung
+df$Total_Area_alt <- df$Total_Area
 df$Total_Area <- log(df$Total_Area)
 print(df$Total_Area)
 hist(df$Total_Area)
 
+df$Population_alt <- df$Population
 df$Population <- log(df$Population)
 print(df$Population)
 hist(df$Population)
 
+df$Population_Density_alt <- df$Population_Density
 df$Population_Density <- log(df$Population_Density)
 print(df$Population_Density)
 hist(df$Population_Density)
+
+#Histogramme
+windows(width = 10, height = 10)
+opar <- par (mar = c(4, 5.5, 2.5, 0.5), lwd = 2,
+             cex = 1.4, las = 1, mfrow = c(3,2))
+hist(df$Total_Area_alt, main = "Fläche",
+     freq = FALSE, ylab = "", xlab = "")
+title(ylab = "Dichte", line = 4)
+hist(df$Total_Area, main = "logtransformierte Fläche",
+     freq = FALSE, ylab = "", xlab = "")
+title(ylab = "Dichte", line = 3)
+hist(df$Population_alt, main = "Bevölkerung",
+     freq = FALSE, ylab = "", xlab = "")
+title(ylab = "Dichte", line = 4)
+hist(df$Population, main = "log. Bevölkerung",
+     freq = FALSE, ylab = "", xlab = "")
+title(ylab = "Dichte", line = 3)
+hist(df$Population_Density_alt, main = "Bevölkerungsdichte",
+     freq = FALSE, ylab = "", xlab = "")
+title(ylab = "Dichte", line = 4)
+hist(df$Population_Density, main = "log. Bevölkerungsdichte",
+     freq = FALSE, ylab = "", xlab = "")
+title(ylab = "Dichte", line = 3)
+par(opar)
 
 ################################################################################
 
