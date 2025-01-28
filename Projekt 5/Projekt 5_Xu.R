@@ -215,18 +215,27 @@ roc_full <- roc(response = preds_full$obs,
                 predictor = preds_full$Trump,
                 levels    = c("Harris","Trump"))
 
-plot(roc_full, col="blue", main="ROC-Kurven (caret)")
+roc_full <- roc(response = preds_full$obs,
+                predictor = preds_full$Trump,
+                levels    = c("Harris","Trump"))
+
+windows(width = 7)
+opar <- par (mar = c( 3.3, 4, 0.2, 0.2), lwd = 2,
+             cex = 1.4, las = 1)
+plot(roc_full, col="blue", xlab = "", ylab = "")
 
 # Dasselbe für das reduzierte Modell
 preds_red <- model_red_cv$pred
 roc_red   <- roc(response = preds_red$obs,
                  predictor = preds_red$Trump,
                  levels    = c("Harris","Trump"))
-lines(roc_red, col="red")
-legend("bottomright", legend=c("Full","Reduced"), col=c("blue","red"), lwd=2)
+lines(roc_red, col="red", xlab = "", ylab = "")
+legend("bottomright", legend=c("voll","reduziert"), col=c("blue","red"), lwd=2)
+title(xlab = "Spezifität", line = 1.8)
+title(ylab = "Sensitivität", line = 2.8)
+par(opar)
 
 auc(roc_full)
 # Area under the curve: 0.8468
 auc(roc_red)
 # Area under the curve: 0.9306
-
