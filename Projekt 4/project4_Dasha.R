@@ -1,6 +1,8 @@
 library(readxl)
 library(ggplot2)
 library(tidyr)
+library(dplyr)
+library(tibble)
 
 df <- read_excel("Medaillen.xlsx")
 head(df)
@@ -86,3 +88,48 @@ chisq.test(contingency_table)
 test <- chisq.test(contingency_table)
 expected_frequencies <- test$expected
 print(expected_frequencies)
+# 
+# # 2)
+# for (sport in unique(data_long$Sportart)) {
+#   daten_sport <- filter(data_long, Sportart == sport)
+#   tabelle <- xtabs(Count ~ Land + Medal_Type, data = daten_sport)
+#   chi_test <- chisq.test(tabelle)
+#   
+#   cat("\nSportart:", sport, "\n")
+#   print(tabelle)
+#   cat("Chi-Quadrat-Statistik:", chi_test$statistic, "\n")
+#   cat("p-Wert:", chi_test$p.value, "\n")
+# }
+# 
+# 
+# for (sport in unique(data_long$Sportart)) {
+# 
+#   friedman_data <- data_long %>%
+#     filter(Sportart == sport) %>%
+#     select(Land, Medal_Type, Count) %>%
+#     pivot_wider(names_from = Medal_Type, values_from = Count, values_fill = 0) %>%
+#     column_to_rownames("Land") 
+# 
+#   if (nrow(friedman_data) > 1 && ncol(friedman_data) > 1) {
+#     friedman_result <- friedman.test(as.matrix(friedman_data))
+#     
+#     cat("\nSportart:", sport, "\n")
+#     print(friedman_result)
+#   } else {
+#     cat("\nSportart:", sport, "не имеет достаточно данных для теста.\n")
+#   }
+# }
+# 
+# 
+# # 3)
+# for (land in unique(data_long$Land)) {
+#   daten_sport <- filter(data_long, Land == land)
+#   tabelle <- xtabs(Count ~ Sportart + Medal_Type, data = daten_sport)
+#   chi_test <- chisq.test(tabelle)
+#   
+#   cat("\nSportart:", sport, "\n")
+#   print(tabelle)
+#   cat("Chi-Quadrat-Statistik:", chi_test$statistic, "\n")
+#   cat("p-Wert:", chi_test$p.value, "\n")
+# }
+# 
