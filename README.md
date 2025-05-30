@@ -4,7 +4,7 @@ This repository contains five group projects completed as part of the **Fallstud
 
 ## Projects Overview
 
-### 1. Descriptive Analysis of Demographic Data (`Projekt1`)
+### 1. Descriptive Analysis of Demographic Data (`Projekt 1`)
 - **Goal**: Explore and describe distributions of demographic features for the year 2022.
 - **Tasks**:
   - Describe frequency distributions and compare between genders.
@@ -15,7 +15,7 @@ This repository contains five group projects completed as part of the **Fallstud
 
 ---
 
-### 2. Comparison of Two Distributions (`Projekt2`)  
+### 2. Comparison of Two Distributions (`Projekt 2`)  
 _This project was presented in class._
 
 - **Goal**: Examine concentration test results (GU vs. UG versions) and effects of repeated testing.
@@ -30,7 +30,7 @@ _This project was presented in class._
     
 ---
 
-### 3. Comparison of Multiple Distributions – Cuckoo Egg Length (`Projekt3`)
+### 3. Comparison of Multiple Distributions – Cuckoo Egg Length (`Projekt 3`)
 - **Goal**: Analyze whether cuckoo eggs found in different host species' nests vary in length.
 - **Tasks**:
   - Test overall differences between host bird species.
@@ -42,7 +42,7 @@ _This project was presented in class._
 
 ---
 
-### 4. Contingency Table Analysis – Olympic Medal Table (`Projekt4`)
+### 4. Contingency Table Analysis – Olympic Medal Table (`Projekt 4`)
 - **Goal**: Explore categorical associations between sports, medal types, and countries.
 - **Tasks**:
   - Investigate the relationship between sport and country in total medal counts.
@@ -55,7 +55,7 @@ _This project was presented in class._
 
 ---
 
-### 5. Logistic Regression Study (`Projekt5`)
+### 5. Logistic Regression Study (`Projekt 5`)
 - **Goal**: Build and evaluate logistic regression models to predict a binary target variable.
 - **Tasks**:
   - Model `Leading_Candidate` using available predictors.
